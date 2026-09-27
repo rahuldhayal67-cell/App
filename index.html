@@ -888,7 +888,8 @@ document.addEventListener("touchend", function(e){
   if(!detection ||
      !window.referenceFaceDescriptors ||
      window.referenceFaceDescriptors.length === 0){
-
+document.getElementById("verificationStatus").innerHTML =
+  "Face not detected";
     return false;
   }
 
