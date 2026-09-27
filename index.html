@@ -861,59 +861,131 @@ function startVoiceCheck(){
     return;
   }
 
-  const recognition = new SpeechRecognition();
+  function startNewChallenge(){
 
-  recognition.lang = "en-IN";
-  recognition.continuous = false;
-  recognition.interimResults = false;
+    const number =
+      Math.floor(1000 + Math.random() * 9000);
 
-  document.getElementById("verificationStatus").textContent =
-    "Listening... Please say the 4-digit number.";
+    window.verificationNumber = number;
 
-  recognition.onresult = function(event){
+    let secondsLeft = 10;
 
-    const spokenText =
-      event.results[0][0].transcript.trim();
+    document.getElementById("verificationStatus").innerHTML =
+      "Say this number within <strong>10 seconds</strong>:<br><br>" +
+      "<strong style='font-size:32px;'>" +
+      number +
+      "</strong><br><br>" +
+      "<span id='verificationCountdown'>10</span> seconds remaining";
 
-    const expected =
-      String(window.verificationNumber);
+    const recognition = new SpeechRecognition();
 
-    if(spokenText.includes(expected)){
+    recognition.lang = "en-IN";
+    recognition.continuous = false;
+    recognition.interimResults = false;
 
-  const movements = [
-    "👈 Turn your head LEFT",
-    "👉 Turn your head RIGHT",
-    "⬆️ Look UP",
-    "⬇️ Look DOWN"
-  ];
+    window.voiceRecognition = recognition;
 
-  const movement =
-    movements[Math.floor(Math.random() * movements.length)];
+    recognition.onresult = function(event){
 
-  document.getElementById("verificationStatus").innerHTML =
-    "Number verified<br><br><strong>" +
-    movement +
-    "</strong>";
+      const spokenText =
+        event.results[0][0].transcript
+          .toLowerCase()
+          .trim();
 
-}else{
+      const expected =
+        String(window.verificationNumber);
 
+      const words = {
+        "zero":"0",
+        "one":"1",
+        "two":"2",
+        "three":"3",
+        "four":"4",
+        "five":"5",
+        "six":"6",
+        "seven":"7",
+        "eight":"8",
+        "nine":"9"
+      };
 
+      let convertedText = spokenText;
 
-      document.getElementById("verificationStatus").textContent =
-        "Number did not match. Please try again.";
+      Object.keys(words).forEach(word => {
+        convertedText =
+          convertedText.replace(
+            new RegExp("\\b" + word + "\\b","g"),
+            words[word]
+          );
+      });
 
+      if(
+        convertedText.includes(expected) &&
+        secondsLeft > 0
+      ){
+
+        clearTimeout(window.voiceChallengeTimer);
+
+        document.getElementById("verificationStatus").innerHTML =
+          "Number verified";
+
+      }else{
+
+        document.getElementById("verificationStatus").innerHTML =
+          "Number did not match.<br>Wait for the next number.";
+
+      }
+
+    };
+
+    recognition.onerror = function(){
+
+      if(secondsLeft > 0){
+
+        document.getElementById("verificationStatus").innerHTML =
+          "Listening... Please say the number.";
+
+      }
+
+    };
+
+    try{
+      recognition.start();
+    }catch(error){
     }
 
-  };
+    const countdownTimer = setInterval(function(){
 
-  recognition.onerror = function(){
+      secondsLeft--;
 
-    document.getElementById("verificationStatus").textContent =
-      "Could not hear the number. Please try again.";
+      const countdown =
+        document.getElementById("verificationCountdown");
 
-  };
+      if(countdown){
+        countdown.textContent = secondsLeft;
+      }
 
-  recognition.start();
+      if(secondsLeft <= 0){
+
+        clearInterval(countdownTimer);
+
+        try{
+          recognition.stop();
+        }catch(error){
+        }
+
+        document.getElementById("verificationStatus").innerHTML =
+          "Time expired.<br><br>Generating a new number...";
+
+        window.voiceChallengeTimer =
+          setTimeout(startNewChallenge, 500);
+
+      }
+
+    },1000);
+
+  }
+
+  startNewChallenge();
 
 }
 </script>
