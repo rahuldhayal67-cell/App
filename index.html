@@ -913,7 +913,7 @@ document.getElementById("faceStatus").textContent =
 document.getElementById("faceStatus").textContent =
   "Face distance: " + distance.toFixed(3);
    
-    if(distance < 0.45){
+    if(distance < 0.55){
       return true;
     }
 
@@ -987,7 +987,7 @@ function startVoiceCheck(){
     const recognition = new SpeechRecognition();
 let faceVerified = false;
 let faceMatchCount = 0;
-
+let voiceVerified = false;
 const faceCheckTimer = setInterval(async function(){
 
   try{
@@ -998,7 +998,7 @@ const faceCheckTimer = setInterval(async function(){
 
   faceMatchCount++;
 
-  if(faceMatchCount >= 3){
+  if(faceMatchCount >= 3 && voiceVerified){
     faceVerified = true;
   }
 
@@ -1058,10 +1058,9 @@ const faceCheckTimer = setInterval(async function(){
 
       if(
   convertedText.includes(expected) &&
-  secondsLeft > 0 &&
-  faceVerified
+  secondsLeft > 0
 ){
-
+        voiceVerified = true;
         clearTimeout(window.voiceChallengeTimer);
 clearInterval(faceCheckTimer);
         document.getElementById("verificationStatus").innerHTML =
@@ -1069,10 +1068,19 @@ clearInterval(faceCheckTimer);
 
       }else{
 
-        document.getElementById("verificationStatus").innerHTML =
-          "Number did not match.<br>Wait for the next number.";
+  if(!convertedText.includes(expected)){
 
-      }
+    document.getElementById("verificationStatus").innerHTML =
+      "Number did not match.<br>Wait for the next number.";
+
+  }else{
+
+    document.getElementById("verificationStatus").innerHTML =
+      "Number correct.<br>Checking face...";
+
+  }
+
+}
 
     };
 
