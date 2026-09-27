@@ -899,7 +899,7 @@ document.addEventListener("touchend", function(e){
         reference,
         detection.descriptor
       );
-
+console.log("Face distance:", distance);
     if(distance < 0.45){
       return true;
     }
