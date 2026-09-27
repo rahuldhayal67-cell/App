@@ -1150,11 +1150,17 @@ clearInterval(faceCheckTimer);
         }catch(error){
         }
 
-        document.getElementById("verificationStatus").innerHTML =
-          "Time expired.<br><br>Generating a new number...";
+        if(voiceVerified && !faceVerified){
 
-        window.voiceChallengeTimer =
-          setTimeout(startNewChallenge, 500);
+  document.getElementById("verificationStatus").innerHTML =
+    "Number verified<br>Face verification failed.";
+
+}else{
+
+  document.getElementById("verificationStatus").innerHTML =
+    "Time expired.";
+
+}
 
       }
 
