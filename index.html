@@ -870,11 +870,14 @@ document.addEventListener("touchend", function(e){
  async function checkLiveFace(){
 
   const video =
-    document.getElementById("verificationCamera");
+  document.getElementById("verificationCamera");
 
-  if(!video.srcObject){
-    return false;
-  }
+if(!video.srcObject ||
+   video.readyState < 2 ||
+   video.videoWidth === 0 ||
+   video.videoHeight === 0){
+  return false;
+}
 
   const detection =
     await faceapi
