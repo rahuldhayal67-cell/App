@@ -834,9 +834,38 @@ document.addEventListener("touchend", function(e){
   window.faceModelsLoaded = true;
 
 }
+ async function prepareReferenceFaces(){
+
+  const files =
+    document.getElementById("profilePhotos").files;
+
+  window.referenceFaceDescriptors = [];
+
+  for(const file of files){
+
+    const image = await faceapi.bufferToImage(file);
+
+    const detection =
+      await faceapi
+        .detectSingleFace(
+          image,
+          new faceapi.TinyFaceDetectorOptions()
+        )
+        .withFaceLandmarks()
+        .withFaceDescriptor();
+
+    if(detection){
+      window.referenceFaceDescriptors.push(
+        detection.descriptor
+      );
+    }
+  }
+
+}
   async function startVerification(){
   await loadFaceModels();
-  const video = document.getElementById("verificationCamera");
+  await prepareReferenceFaces();
+    const video = document.getElementById("verificationCamera");
 
   try{
 
