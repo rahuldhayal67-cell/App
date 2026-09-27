@@ -900,6 +900,8 @@ document.addEventListener("touchend", function(e){
         detection.descriptor
       );
 console.log("Face distance:", distance);
+   document.getElementById("verificationStatus").innerHTML =
+  "Face distance: " + distance.toFixed(3);
     if(distance < 0.45){
       return true;
     }
