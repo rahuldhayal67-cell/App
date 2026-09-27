@@ -996,17 +996,25 @@ const faceCheckTimer = setInterval(async function(){
 
     if(matched){
 
-  faceMatchCount++;
+      faceMatchCount++;
 
-  if(faceMatchCount >= 3 && voiceVerified){
-    faceVerified = true;
-  }
+    }else{
 
-}else{
+      faceMatchCount = 0;
 
-  faceMatchCount = 0;
+    }
 
-}
+    faceVerified = faceMatchCount >= 3;
+
+    if(faceVerified && voiceVerified){
+
+      clearInterval(faceCheckTimer);
+      clearTimeout(window.voiceChallengeTimer);
+
+      document.getElementById("verificationStatus").innerHTML =
+        "Face verified<br>Number verified";
+
+    }
 
   }catch(error){
 
