@@ -1019,6 +1019,8 @@ const faceCheckTimer = setInterval(async function(){
 
       const expected =
         String(window.verificationNumber);
+      document.getElementById("voiceStatus").textContent =
+  "Heard: " + spokenText + " | Expected: " + expected;
 
       const words = {
         "zero":"0",
