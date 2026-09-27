@@ -406,7 +406,9 @@ select option {
   muted
   style="width:100%; max-width:400px; border-radius:16px; margin-top:20px; transform:scaleX(-1);"
 ></video>
- 
+ <div id="faceStatus" class="small">
+  Face checking...
+</div>
 <p class="small">
   Please say the 4 digits loudly, one by one, in English.
 </p>
@@ -894,7 +896,7 @@ if(!video.srcObject ||
   if(!detection ||
      !window.referenceFaceDescriptors ||
      window.referenceFaceDescriptors.length === 0){
-document.getElementById("verificationStatus").innerHTML =
+document.getElementById("faceStatus").textContent =
   "Face not detected";
     return false;
   }
@@ -906,7 +908,8 @@ document.getElementById("verificationStatus").innerHTML =
         reference,
         detection.descriptor
       );
-console.log("Face distance:", distance);
+document.getElementById("faceStatus").textContent =
+  "Face distance: " + distance.toFixed(3);
    
     if(distance < 0.45){
       return true;
