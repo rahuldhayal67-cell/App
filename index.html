@@ -1061,10 +1061,21 @@ const faceCheckTimer = setInterval(async function(){
   secondsLeft > 0
 ){
         voiceVerified = true;
-        clearTimeout(window.voiceChallengeTimer);
+clearTimeout(window.voiceChallengeTimer);
 
-        document.getElementById("verificationStatus").innerHTML =
-  "Face verified<br>Number verified";
+if(faceVerified){
+
+  clearInterval(faceCheckTimer);
+
+  document.getElementById("verificationStatus").innerHTML =
+    "Face verified<br>Number verified";
+
+}else{
+
+  document.getElementById("verificationStatus").innerHTML =
+    "Number verified<br>Checking face...";
+
+}
 
       }else{
 
