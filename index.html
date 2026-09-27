@@ -986,6 +986,7 @@ function startVoiceCheck(){
 
     const recognition = new SpeechRecognition();
 let faceVerified = false;
+let faceMatchCount = 0;
 
 const faceCheckTimer = setInterval(async function(){
 
@@ -994,8 +995,18 @@ const faceCheckTimer = setInterval(async function(){
     const matched = await checkLiveFace();
 
     if(matched){
-      faceVerified = true;
-    }
+
+  faceMatchCount++;
+
+  if(faceMatchCount >= 3){
+    faceVerified = true;
+  }
+
+}else{
+
+  faceMatchCount = 0;
+
+}
 
   }catch(error){
 
