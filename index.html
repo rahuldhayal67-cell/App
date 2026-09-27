@@ -1050,7 +1050,13 @@ clearInterval(faceCheckTimer);
 
     recognition.onerror = function(){
 
-      if(secondsLeft > 0){
+  if(secondsLeft > 0){
+
+    // Keep the number and countdown visible.
+
+  }
+
+};
 
         document.getElementById("verificationStatus").innerHTML =
           "Listening... Please say the number.";
