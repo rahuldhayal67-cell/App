@@ -406,7 +406,12 @@ select option {
   muted
   style="width:100%; max-width:400px; border-radius:16px; margin-top:20px; transform:scaleX(-1);"
 ></video>
-  <button onclick="startVerification()">
+ 
+<p class="small">
+  Please say the 4 digits loudly, one by one, in English.
+</p>
+
+    <button onclick="startVerification()">
     Start Verification
   </button>
 
@@ -862,6 +867,47 @@ document.addEventListener("touchend", function(e){
   }
 
 }
+ async function checkLiveFace(){
+
+  const video =
+    document.getElementById("verificationCamera");
+
+  if(!video.srcObject){
+    return false;
+  }
+
+  const detection =
+    await faceapi
+      .detectSingleFace(
+        video,
+        new faceapi.TinyFaceDetectorOptions()
+      )
+      .withFaceLandmarks()
+      .withFaceDescriptor();
+
+  if(!detection ||
+     !window.referenceFaceDescriptors ||
+     window.referenceFaceDescriptors.length === 0){
+
+    return false;
+  }
+
+  for(const reference of window.referenceFaceDescriptors){
+
+    const distance =
+      faceapi.euclideanDistance(
+        reference,
+        detection.descriptor
+      );
+
+    if(distance < 0.6){
+      return true;
+    }
+
+  }
+
+  return false;
+} 
   async function startVerification(){
   await loadFaceModels();
   await prepareReferenceFaces();
@@ -926,7 +972,23 @@ function startVoiceCheck(){
       "<span id='verificationCountdown'>10</span> seconds remaining";
 
     const recognition = new SpeechRecognition();
+let faceVerified = false;
 
+const faceCheckTimer = setInterval(async function(){
+
+  try{
+
+    const matched = await checkLiveFace();
+
+    if(matched){
+      faceVerified = true;
+    }
+
+  }catch(error){
+
+  }
+
+}, 500);
     recognition.lang = "en-IN";
     recognition.continuous = false;
     recognition.interimResults = false;
@@ -967,12 +1029,13 @@ function startVoiceCheck(){
       });
 
       if(
-        convertedText.includes(expected) &&
-        secondsLeft > 0
-      ){
+  convertedText.includes(expected) &&
+  secondsLeft > 0 &&
+  faceVerified
+){
 
         clearTimeout(window.voiceChallengeTimer);
-
+clearInterval(faceCheckTimer);
         document.getElementById("verificationStatus").innerHTML =
           "Number verified";
 
@@ -1015,7 +1078,7 @@ function startVoiceCheck(){
       if(secondsLeft <= 0){
 
         clearInterval(countdownTimer);
-
+clearInterval(faceCheckTimer);
         try{
           recognition.stop();
         }catch(error){
