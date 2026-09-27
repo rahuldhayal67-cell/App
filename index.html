@@ -1012,6 +1012,8 @@ const faceCheckTimer = setInterval(async function(){
         event.results[0][0].transcript
           .toLowerCase()
           .trim();
+      document.getElementById("faceStatus").textContent =
+  "Heard: " + spokenText;
 
       const expected =
         String(window.verificationNumber);
