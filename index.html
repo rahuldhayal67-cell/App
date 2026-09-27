@@ -409,6 +409,8 @@ select option {
  <div id="faceStatus" class="small">
   Face checking...
 </div>
+    <div id="voiceStatus" class="small">
+</div>
 <p class="small">
   Please say the 4 digits loudly, one by one, in English.
 </p>
@@ -1012,7 +1014,7 @@ const faceCheckTimer = setInterval(async function(){
         event.results[0][0].transcript
           .toLowerCase()
           .trim();
-      document.getElementById("faceStatus").textContent =
+      document.getElementById("voiceStatus").textContent =
   "Heard: " + spokenText;
 
       const expected =
