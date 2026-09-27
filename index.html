@@ -974,7 +974,7 @@ function startVoiceCheck(){
       Math.floor(1000 + Math.random() * 9000);
 
     window.verificationNumber = number;
-
+document.getElementById("voiceStatus").textContent = "";
     let secondsLeft = 10;
 
     document.getElementById("verificationStatus").innerHTML =
@@ -1093,7 +1093,18 @@ clearInterval(faceCheckTimer);
   }
 
 };
+recognition.onend = function(){
 
+  if(secondsLeft > 0 && !voiceVerified){
+
+    try{
+      recognition.start();
+    }catch(error){
+    }
+
+  }
+
+};
     
    try{
       recognition.start();
