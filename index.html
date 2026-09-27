@@ -816,8 +816,26 @@ document.addEventListener("touchend", function(e){
   document.getElementById("photoPage").classList.remove("hidden");
 
 }
- async function startVerification(){
+ async function loadFaceModels(){
 
+  if(window.faceModelsLoaded){
+    return;
+  }
+
+  const modelPath =
+    new URL("models/", document.baseURI).href;
+
+  await Promise.all([
+    faceapi.nets.tinyFaceDetector.loadFromUri(modelPath),
+    faceapi.nets.faceLandmark68Net.loadFromUri(modelPath),
+    faceapi.nets.faceRecognitionNet.loadFromUri(modelPath)
+  ]);
+
+  window.faceModelsLoaded = true;
+
+}
+  async function startVerification(){
+  await loadFaceModels();
   const video = document.getElementById("verificationCamera");
 
   try{
