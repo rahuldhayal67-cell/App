@@ -220,7 +220,61 @@ select option {
   </a>
 </p>
 </div>
+<!-- FORGOT PASSWORD PAGE -->
+<div id="forgotPasswordPage" class="card hidden"
+     style="display:none; position:fixed; inset:0; z-index:10000; overflow-y:auto; margin:0; border-radius:0; width:100%; box-sizing:border-box;">
 
+  <button
+    onclick="backToLogin()"
+    style="width:auto; padding:8px 12px;"
+  >
+    ← Back
+  </button>
+
+  <h2 style="margin-top:40px;">Reset Password</h2>
+
+  <p class="small">
+    Enter your email address and we'll send you a password reset link.
+  </p>
+
+  <input
+    id="resetEmail"
+    type="email"
+    placeholder="Enter your email"
+  >
+
+  <button onclick="sendPasswordReset()">
+    Send Reset Link
+  </button>
+
+  <p id="resetMsg" class="small"></p>
+
+</div>
+  <!-- RESET PASSWORD PAGE -->
+<div id="resetPasswordPage" class="card hidden"
+     style="display:none; position:fixed; inset:0; z-index:10001; overflow-y:auto; margin:0; border-radius:0; width:100%; box-sizing:border-box;">
+
+  <h2 style="margin-top:40px;">Create New Password</h2>
+
+  <input
+    id="newPassword"
+    type="password"
+    placeholder="New password"
+  >
+
+  <input
+    id="confirmNewPassword"
+    type="password"
+    placeholder="Confirm new password"
+  >
+
+  <button onclick="resetPassword()">
+    Reset Password
+  </button>
+
+  <p id="newPasswordMsg" class="small"></p>
+
+</div>
 <div id="app" class="card hidden">
 <h2>You're logged in Connect</h2>
 <p id="user"></p>
@@ -430,61 +484,8 @@ select option {
 </button>
 
 </div>
-<!-- FORGOT PASSWORD PAGE -->
-<div id="forgotPasswordPage" class="card hidden"
-     style="display:none; position:fixed; inset:0; z-index:10000; overflow-y:auto; margin:0; border-radius:0; width:100%; box-sizing:border-box;">
 
-  <button
-    onclick="backToLogin()"
-    style="width:auto; padding:8px 12px;"
-  >
-    ← Back
-  </button>
-
-  <h2 style="margin-top:40px;">Reset Password</h2>
-
-  <p class="small">
-    Enter your email address and we'll send you a password reset link.
-  </p>
-
-  <input
-    id="resetEmail"
-    type="email"
-    placeholder="Enter your email"
-  >
-
-  <button onclick="sendPasswordReset()">
-    Send Reset Link
-  </button>
-
-  <p id="resetMsg" class="small"></p>
-
-</div>
-  <!-- RESET PASSWORD PAGE -->
-<div id="resetPasswordPage" class="card hidden"
-     style="display:none; position:fixed; inset:0; z-index:10001; overflow-y:auto; margin:0; border-radius:0; width:100%; box-sizing:border-box;">
-
-  <h2 style="margin-top:40px;">Create New Password</h2>
-
-  <input
-    id="newPassword"
-    type="password"
-    placeholder="New password"
-  >
-
-  <input
-    id="confirmNewPassword"
-    type="password"
-    placeholder="Confirm new password"
-  >
-
-  <button onclick="resetPassword()">
-    Reset Password
-  </button>
-
-  <p id="newPasswordMsg" class="small"></p>
-
-</div>
+  
 <!-- SUBSCRIPTION PAGE -->
 <div id="subscriptionPage" class="card hidden"
      style="display:none; position:fixed; inset:0; z-index:9999; overflow-y:auto; margin:0; border-radius:0; width:100%; box-sizing:border-box;">
