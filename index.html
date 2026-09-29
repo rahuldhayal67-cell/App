@@ -840,13 +840,14 @@ async function loadProfilePhotos(user){
 
 }
  async function continueToVerification(){
-   localStorage.setItem("onboardingStep", "verification");
+   
 const uploaded = await uploadProfilePhotos();
 
 if(!uploaded){
   return;
 }
-  const files =
+ localStorage.setItem("onboardingStep", "verification");
+   const files =
   document.getElementById("profilePhotos").files;
 
 if(files.length === 0){
