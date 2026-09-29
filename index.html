@@ -1335,28 +1335,28 @@ const faceCheckTimer = setInterval(async function(){
   convertedText.includes(expected) &&
   secondsLeft > 0
 ){
-        voiceVerified = true;
-clearTimeout(window.voiceChallengeTimer);
 
-if(faceVerified){
+  voiceVerified = true;
 
-  clearInterval(faceCheckTimer);
+  clearTimeout(window.voiceChallengeTimer);
 
-  document.getElementById("verificationStatus").innerHTML =
-    "Face verified<br>Number verified";
+  if(faceVerified){
 
-  openSubscriptionPage();
+    clearInterval(faceCheckTimer);
 
-}
+    document.getElementById("verificationStatus").innerHTML =
+      "Face verified<br>Number verified";
+
+    openSubscriptionPage();
+
+  }else{
+
+    document.getElementById("verificationStatus").innerHTML =
+      "Number verified<br>Checking face...";
+
+  }
 
 }else{
-
-  document.getElementById("verificationStatus").innerHTML =
-    "Number verified<br>Checking face...";
-
-}
-
-      }else{
 
   if(!convertedText.includes(expected)){
 
@@ -1371,8 +1371,6 @@ if(faceVerified){
   }
 
 }
-
-    };
 
     recognition.onerror = function(){
 
