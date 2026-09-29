@@ -608,7 +608,7 @@ async function saveProfile(){
 
 document.getElementById("profileMsg").textContent =
   "Profile saved";
-
+localStorage.setItem("onboardingStep", "photos");
 document.getElementById("photoPage").classList.remove("hidden");
 document.getElementById("photoPage").style.display = "block";
 
@@ -698,6 +698,14 @@ if(onboardingStep === "verification"){
 
   document.getElementById("verificationPage").classList.remove("hidden");
   document.getElementById("verificationPage").style.display = "block";
+
+}
+    if(onboardingStep === "photos"){
+
+  document.getElementById("profilePage").style.display = "none";
+
+  document.getElementById("photoPage").classList.remove("hidden");
+  document.getElementById("photoPage").style.display = "block";
 
 }
 }
