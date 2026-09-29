@@ -1184,6 +1184,15 @@ setTimeout(() => {
   }
 
 }
+  function openSubscriptionPage(){
+
+  document.getElementById("verificationPage").style.display = "none";
+  document.getElementById("verificationPage").classList.add("hidden");
+
+  document.getElementById("subscriptionPage").classList.remove("hidden");
+  document.getElementById("subscriptionPage").style.display = "block";
+
+}
 function startVoiceCheck(){
 
   const SpeechRecognition =
@@ -1240,6 +1249,7 @@ const faceCheckTimer = setInterval(async function(){
 
       document.getElementById("verificationStatus").innerHTML =
         "Face verified<br>Number verified";
+      openSubscriptionPage();
 
     }
 
@@ -1304,6 +1314,10 @@ if(faceVerified){
 
   document.getElementById("verificationStatus").innerHTML =
     "Face verified<br>Number verified";
+
+  openSubscriptionPage();
+
+}
 
 }else{
 
