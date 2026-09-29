@@ -731,8 +731,12 @@ db.auth.getSession().then(({data})=>{
 
 }
 
-  function continueToVerification(){
+ async function continueToVerification(){
+const uploaded = await uploadProfilePhotos();
 
+if(!uploaded){
+  return;
+}
   const files =
     document.getElementById("profilePhotos").files;
 
