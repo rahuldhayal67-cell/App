@@ -828,12 +828,34 @@ if(!uploaded){
   return;
 }
   const files =
-    document.getElementById("profilePhotos").files;
+  document.getElementById("profilePhotos").files;
 
-  if(files.length < 2 || files.length > 5){
-    alert("Please select between 2 and 5 photos.");
+if(files.length === 0){
+
+  const { data: { user } } =
+    await db.auth.getUser();
+
+  if(!user){
+    alert("User not logged in.");
     return;
   }
+
+  const { data, error } =
+    await db.storage
+      .from("profile-photos")
+      .list(user.id);
+
+  if(error || !data || data.length < 2 || data.length > 5){
+    alert("Please upload between 2 and 5 photos.");
+    return;
+  }
+
+}else if(files.length < 2 || files.length > 5){
+
+  alert("Please select between 2 and 5 photos.");
+  return;
+
+}
 
   document.getElementById("photoPage").style.display = "none";
   document.getElementById("photoPage").classList.add("hidden");
@@ -975,14 +997,64 @@ document.addEventListener("touchend", function(e){
 }
  async function prepareReferenceFaces(){
 
-  const files =
+  let files =
     document.getElementById("profilePhotos").files;
+
+  // If no files are selected, load saved photos from Supabase
+  if(files.length === 0){
+
+    const { data: { user } } =
+      await db.auth.getUser();
+
+    if(!user){
+      return;
+    }
+
+    const { data, error } =
+      await db.storage
+        .from("profile-photos")
+        .list(user.id);
+
+    if(error || !data || data.length === 0){
+      return;
+    }
+
+    const downloadedFiles = [];
+
+    for(const file of data){
+
+      const { data: urlData } =
+        db.storage
+          .from("profile-photos")
+          .getPublicUrl(
+            user.id + "/" + file.name
+          );
+
+      const response =
+        await fetch(urlData.publicUrl);
+
+      const blob =
+        await response.blob();
+
+      downloadedFiles.push(
+        new File(
+          [blob],
+          file.name,
+          { type: blob.type }
+        )
+      );
+
+    }
+
+    files = downloadedFiles;
+  }
 
   window.referenceFaceDescriptors = [];
 
   for(const file of files){
 
-    const image = await faceapi.bufferToImage(file);
+    const image =
+      await faceapi.bufferToImage(file);
 
     const detection =
       await faceapi
@@ -994,10 +1066,13 @@ document.addEventListener("touchend", function(e){
         .withFaceDescriptor();
 
     if(detection){
+
       window.referenceFaceDescriptors.push(
         detection.descriptor
       );
+
     }
+
   }
 
 }
