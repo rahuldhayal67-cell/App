@@ -554,7 +554,55 @@ async function login(){
 
  showApp(data.user);
 }
+function openForgotPassword(){
 
+  document.getElementById("auth").classList.add("hidden");
+  document.getElementById("app").classList.add("hidden");
+
+  document.getElementById("forgotPasswordPage").classList.remove("hidden");
+  document.getElementById("forgotPasswordPage").style.display = "block";
+}
+
+
+function backToLogin(){
+
+  document.getElementById("forgotPasswordPage").style.display = "none";
+  document.getElementById("forgotPasswordPage").classList.add("hidden");
+
+  document.getElementById("auth").classList.remove("hidden");
+}
+
+
+async function sendPasswordReset(){
+
+  const email =
+    document.getElementById("resetEmail").value.trim();
+
+  if(!email){
+
+    document.getElementById("resetMsg").textContent =
+      "Please enter your email.";
+
+    return;
+  }
+
+  const { error } =
+    await db.auth.resetPasswordForEmail(email, {
+      redirectTo:
+        "https://rahuldhayal67-cell.github.io/App/"
+    });
+
+  if(error){
+
+    document.getElementById("resetMsg").textContent =
+      error.message;
+
+    return;
+  }
+
+  document.getElementById("resetMsg").textContent =
+    "Check your email for reset the password.";
+}
 let locationData = [];
 
 
