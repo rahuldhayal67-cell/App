@@ -1356,19 +1356,10 @@ const faceCheckTimer = setInterval(async function(){
 
   }
 
+}else{
 
-
-  if(!convertedText.includes(expected)){
-
-    document.getElementById("verificationStatus").innerHTML =
-      "Number did not match.<br>Wait for the next number.";
-
-  }else{
-
-    document.getElementById("verificationStatus").innerHTML =
-      "Number correct.<br>Checking face...";
-
-  }
+  document.getElementById("verificationStatus").innerHTML =
+    "Number did not match.<br>Wait for the next number.";
 
 }
 
