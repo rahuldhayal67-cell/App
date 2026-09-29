@@ -523,7 +523,21 @@ const SUPABASE_URL = "https://pgperzhczsoifkvdwshd.supabase.co";
 const SUPABASE_KEY = "sb_publishable_q2Ph4B0MXko-tkYPnB2-nA_cleEm3mh";
 
 const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+db.auth.onAuthStateChange((event, session) => {
 
+  if(event === "PASSWORD_RECOVERY"){
+
+    document.getElementById("auth").classList.add("hidden");
+    document.getElementById("app").classList.add("hidden");
+
+    document.getElementById("forgotPasswordPage").classList.add("hidden");
+    document.getElementById("forgotPasswordPage").style.display = "none";
+
+    document.getElementById("resetPasswordPage").classList.remove("hidden");
+    document.getElementById("resetPasswordPage").style.display = "block";
+  }
+
+});
 async function signup(){
  const email=document.getElementById("email").value;
  const password=document.getElementById("password").value;
