@@ -733,7 +733,9 @@ db.auth.getSession().then(({data})=>{
 
   const files =
     document.getElementById("profilePhotos").files;
-
+if(files.length === 0){
+  return true;
+}
   const { data: { user } } =
     await db.auth.getUser();
 
