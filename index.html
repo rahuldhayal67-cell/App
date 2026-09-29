@@ -615,7 +615,7 @@ document.getElementById("photoPage").style.display = "block";
 document.getElementById("profilePage").style.display = "none";
 }
   function backToProfile(){
-
+localStorage.setItem("onboardingStep", "profile");
   document.getElementById("photoPage").style.display = "none";
   document.getElementById("photoPage").classList.add("hidden");
 
@@ -706,6 +706,17 @@ if(onboardingStep === "verification"){
 
   document.getElementById("photoPage").classList.remove("hidden");
   document.getElementById("photoPage").style.display = "block";
+
+}
+    if(onboardingStep === "profile"){
+
+  document.getElementById("photoPage").style.display = "none";
+  document.getElementById("photoPage").classList.add("hidden");
+
+  document.getElementById("verificationPage").style.display = "none";
+  document.getElementById("verificationPage").classList.add("hidden");
+
+  document.getElementById("profilePage").style.display = "block";
 
 }
 }
@@ -964,7 +975,7 @@ document.addEventListener("touchend", function(e){
 
 }, {passive:false});
   function backToPhotos(){
-
+localStorage.setItem("onboardingStep", "photos");
   const video =
     document.getElementById("verificationCamera");
 
