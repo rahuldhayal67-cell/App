@@ -561,10 +561,12 @@ async function login(){
 
  const {data,error}=await db.auth.signInWithPassword({email,password});
 
- if(error){
-   document.getElementById("msg").textContent=error.message;
-   return;
- }
+if(error){
+  document.getElementById("msg").innerHTML =
+    "Incorrect email or password.<br><br>" +
+    "<a href='#' onclick='openForgotPassword(); return false;'>Forgot password?</a>";
+  return;
+}
 
  showApp(data.user);
 }
@@ -872,7 +874,66 @@ if(onboardingStep === "verification"){
 
 }
 }
+async function resetPassword(){
 
+  const newPassword =
+    document.getElementById("newPassword").value;
+
+  const confirmPassword =
+    document.getElementById("confirmNewPassword").value;
+
+  const msg =
+    document.getElementById("newPasswordMsg");
+
+  if(!newPassword || !confirmPassword){
+    msg.textContent = "Please enter and confirm your new password.";
+    return;
+  }
+
+  if(newPassword !== confirmPassword){
+    msg.textContent = "Passwords do not match.";
+    return;
+  }
+
+  if(newPassword.length < 6){
+    msg.textContent = "Password must be at least 6 characters.";
+    return;
+  }
+
+  const { error } =
+    await db.auth.updateUser({
+      password: newPassword
+    });
+
+  if(error){
+    msg.textContent = error.message;
+    return;
+  }
+
+  msg.textContent =
+    "Password reset successfully. Redirecting to login...";
+
+  setTimeout(async () => {
+
+    await db.auth.signOut();
+
+    document.getElementById("resetPasswordPage")
+      .style.display = "none";
+
+    document.getElementById("resetPasswordPage")
+      .classList.add("hidden");
+
+    document.getElementById("auth")
+      .classList.remove("hidden");
+
+    document.getElementById("email").value = "";
+    document.getElementById("password").value = "";
+
+    document.getElementById("msg").textContent =
+      "You can now login with your new password.";
+
+  }, 1500);
+}
 function showAuth(){
  document.getElementById("auth").classList.remove("hidden");
  document.getElementById("app").classList.add("hidden");
