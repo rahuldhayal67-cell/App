@@ -709,12 +709,44 @@ db.auth.getSession().then(({data})=>{
     return false;
   }
 
-  for(const file of files){
+  const folder = user.id;
+
+  // Delete existing photos first
+  const { data: oldFiles, error: listError } =
+    await db.storage
+      .from("profile-photos")
+      .list(folder);
+
+  if(listError){
+    alert("Could not check existing photos: " + listError.message);
+    return false;
+  }
+
+  if(oldFiles && oldFiles.length > 0){
+
+    const oldPaths =
+      oldFiles.map(file => folder + "/" + file.name);
+
+    const { error: deleteError } =
+      await db.storage
+        .from("profile-photos")
+        .remove(oldPaths);
+
+    if(deleteError){
+      alert("Could not replace old photos: " + deleteError.message);
+      return false;
+    }
+
+  }
+
+  // Upload the new photos
+  for(let i = 0; i < files.length; i++){
+
+    const file = files[i];
 
     const filePath =
-      user.id + "/" +
-      Date.now() + "-" +
-      file.name;
+      folder + "/photo-" + (i + 1) + "." +
+      file.name.split(".").pop();
 
     const { error } =
       await db.storage
