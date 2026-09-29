@@ -751,7 +751,7 @@ db.auth.getSession().then(({data})=>{
     const { error } =
       await db.storage
         .from("profile-photos")
-        .upload(filePath, file);
+       .upload(filePath, file, { upsert: true });
 
     if(error){
       alert("Photo upload failed: " + error.message);
