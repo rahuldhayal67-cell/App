@@ -420,7 +420,37 @@ select option {
   </button>
 
 </button>
+
 </div>
+
+<!-- SUBSCRIPTION PAGE -->
+<div id="subscriptionPage" class="card hidden"
+     style="display:none; position:fixed; inset:0; z-index:9999; overflow-y:auto; margin:0; border-radius:0; width:100%; box-sizing:border-box;">
+
+  <h2 style="margin-top:60px;">Choose Your Subscription 💎</h2>
+
+  <p class="small">
+    Your face and number have been successfully verified.
+  </p>
+
+  <button onclick="selectSubscription('1 Day')">
+    1 Day
+  </button>
+
+  <button onclick="selectSubscription('1 Week')">
+    1 Week
+  </button>
+
+  <button onclick="selectSubscription('1 Month')">
+    1 Month
+  </button>
+
+  <button onclick="selectSubscription('1 Year')">
+    1 Year
+  </button>
+
+</div>
+
 <p id="profileMsg" class="small"></p>
 <button onclick="logout()">Logout</button>
 </div>
