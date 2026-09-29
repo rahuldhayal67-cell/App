@@ -953,7 +953,11 @@ function showAuth(){
 }
 
 db.auth.getSession().then(({data})=>{
- if(data.session) showApp(data.session.user);
+  if(data.session){
+    showApp(data.session.user);
+  }else{
+    showAuth();
+  }
 });
   async function uploadProfilePhotos(){
 
