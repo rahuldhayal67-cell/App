@@ -695,7 +695,43 @@ function showAuth(){
 db.auth.getSession().then(({data})=>{
  if(data.session) showApp(data.session.user);
 });
-function continueToVerification(){
+  async function uploadProfilePhotos(){
+
+  const files =
+    document.getElementById("profilePhotos").files;
+
+  const { data: { user } } =
+    await db.auth.getUser();
+
+  if(!user){
+    alert("User not logged in.");
+    return false;
+  }
+
+  for(const file of files){
+
+    const filePath =
+      user.id + "/" +
+      Date.now() + "-" +
+      file.name;
+
+    const { error } =
+      await db.storage
+        .from("profile-photos")
+        .upload(filePath, file);
+
+    if(error){
+      alert("Photo upload failed: " + error.message);
+      return false;
+    }
+
+  }
+
+  return true;
+
+}
+
+  function continueToVerification(){
 
   const files =
     document.getElementById("profilePhotos").files;
