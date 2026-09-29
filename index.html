@@ -624,6 +624,7 @@ document.getElementById("profilePage").style.display = "none";
 }
   async function showApp(user){
   await loadLocationData();
+    await loadProfilePhotos(user);
   document.getElementById("auth").classList.add("hidden");
   document.getElementById("app").classList.remove("hidden");
   document.getElementById("user").textContent =
@@ -730,7 +731,49 @@ db.auth.getSession().then(({data})=>{
   return true;
 
 }
+async function loadProfilePhotos(user){
 
+  const { data, error } =
+    await db.storage
+      .from("profile-photos")
+      .list(user.id);
+
+  if(error){
+    console.log("Photo load error:", error.message);
+    return;
+  }
+
+  const preview =
+    document.getElementById("photoPreview");
+
+  if(!preview){
+    return;
+  }
+
+  preview.innerHTML = "";
+
+  data.forEach(file => {
+
+    const { data: urlData } =
+      db.storage
+        .from("profile-photos")
+        .getPublicUrl(user.id + "/" + file.name);
+
+    const img =
+      document.createElement("img");
+
+    img.src = urlData.publicUrl;
+    img.style.width = "100px";
+    img.style.height = "100px";
+    img.style.objectFit = "cover";
+    img.style.borderRadius = "12px";
+    img.style.margin = "5px";
+
+    preview.appendChild(img);
+
+  });
+
+}
  async function continueToVerification(){
 const uploaded = await uploadProfilePhotos();
 
