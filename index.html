@@ -562,9 +562,8 @@ async function login(){
  const {data,error}=await db.auth.signInWithPassword({email,password});
 
 if(error){
-  document.getElementById("msg").innerHTML =
-    "Incorrect email or password.<br><br>" +
-    "<a href='#' onclick='openForgotPassword(); return false;'>Forgot password?</a>";
+  document.getElementById("msg").textContent =
+    "Incorrect email or password.";
   return;
 }
 
