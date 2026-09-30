@@ -531,7 +531,10 @@ db.auth.onAuthStateChange((event, session) => {
   if(event === "PASSWORD_RECOVERY"){
 
     document.getElementById("auth").classList.add("hidden");
-    document.getElementById("app").classList.add("hidden");
+document.getElementById("auth").style.display = "none";
+
+document.getElementById("app").classList.add("hidden");
+document.getElementById("app").style.display = "none";
 
     document.getElementById("forgotPasswordPage").classList.add("hidden");
     document.getElementById("forgotPasswordPage").style.display = "none";
