@@ -791,10 +791,15 @@ localStorage.setItem("onboardingStep", "profile");
 
 }
   async function showApp(user){
-  await loadLocationData();
-    await loadProfilePhotos(user);
+
   document.getElementById("auth").classList.add("hidden");
+  document.getElementById("auth").style.display = "none";
+
   document.getElementById("app").classList.remove("hidden");
+  document.getElementById("app").style.display = "block";
+
+  await loadLocationData();
+  await loadProfilePhotos(user);
   document.getElementById("user").textContent =
     "Logged in as " + user.email;
 
