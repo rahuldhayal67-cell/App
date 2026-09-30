@@ -873,6 +873,20 @@ if(onboardingStep === "verification"){
   document.getElementById("verificationPage").style.display = "block";
 
 }
+    if(onboardingStep === "subscription"){
+
+  document.getElementById("profilePage").style.display = "none";
+
+  document.getElementById("photoPage").style.display = "none";
+  document.getElementById("photoPage").classList.add("hidden");
+
+  document.getElementById("verificationPage").style.display = "none";
+  document.getElementById("verificationPage").classList.add("hidden");
+
+  document.getElementById("subscriptionPage").classList.remove("hidden");
+  document.getElementById("subscriptionPage").style.display = "block";
+
+}
     if(onboardingStep === "photos"){
 
   document.getElementById("profilePage").style.display = "none";
@@ -1441,7 +1455,7 @@ window.verificationNumber = number;
 
 }
   function openSubscriptionPage(){
-
+localStorage.setItem("onboardingStep", "subscription");
   const video =
     document.getElementById("verificationCamera");
 
