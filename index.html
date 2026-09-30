@@ -470,7 +470,7 @@ select option {
   style="width:100%; max-width:400px; border-radius:16px; margin-top:20px; transform:scaleX(-1);"
 ></video>
  <div id="faceStatus" class="small">
-  Face checking...
+  Waiting to start verification...
 </div>
     <div id="voiceStatus" class="small">
 </div>
@@ -1414,7 +1414,8 @@ document.getElementById("faceStatus").textContent =
       });
 
     video.srcObject = stream;
-
+document.getElementById("faceStatus").textContent =
+  "Face checking...";
     await loadFaceModels();
     await prepareReferenceFaces();
 
