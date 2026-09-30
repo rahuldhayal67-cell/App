@@ -1393,9 +1393,24 @@ document.getElementById("faceStatus").textContent =
   return false;
 } 
   async function startVerification(){
-  await loadFaceModels();
-  await prepareReferenceFaces();
-    const video = document.getElementById("verificationCamera");
+
+  const video =
+    document.getElementById("verificationCamera");
+
+  try{
+
+    const stream =
+      await navigator.mediaDevices.getUserMedia({
+        video:{
+          facingMode:"user"
+        },
+        audio:true
+      });
+
+    video.srcObject = stream;
+
+    await loadFaceModels();
+    await prepareReferenceFaces();
 
   try{
 
