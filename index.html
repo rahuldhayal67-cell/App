@@ -1454,6 +1454,16 @@ window.verificationNumber = number;
     video.srcObject = null;
 
   }
+    if(window.voiceRecognition){
+
+  try{
+    window.voiceRecognition.stop();
+  }catch(error){
+  }
+
+  window.voiceRecognition = null;
+
+}
 
   document.getElementById("verificationPage").style.display = "none";
   document.getElementById("verificationPage").classList.add("hidden");
