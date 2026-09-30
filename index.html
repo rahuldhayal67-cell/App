@@ -1417,9 +1417,8 @@ window.verificationNumber = number;
       "Your verification number is:<br><strong style='font-size:32px;'>" +
       number +
       "</strong><br><br>Remember this number.";
-setTimeout(() => {
+
   startVoiceCheck();
-}, 1500);
   }catch(error){
 
     document.getElementById("verificationStatus").textContent =
