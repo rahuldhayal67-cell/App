@@ -1442,6 +1442,19 @@ window.verificationNumber = number;
 }
   function openSubscriptionPage(){
 
+  const video =
+    document.getElementById("verificationCamera");
+
+  if(video.srcObject){
+
+    video.srcObject
+      .getTracks()
+      .forEach(track => track.stop());
+
+    video.srcObject = null;
+
+  }
+
   document.getElementById("verificationPage").style.display = "none";
   document.getElementById("verificationPage").classList.add("hidden");
 
