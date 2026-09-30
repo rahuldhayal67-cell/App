@@ -928,8 +928,11 @@ async function resetPassword(){
     document.getElementById("resetPasswordPage")
       .classList.add("hidden");
 
-    document.getElementById("auth")
-      .classList.remove("hidden");
+   document.getElementById("auth")
+  .classList.remove("hidden");
+
+document.getElementById("auth")
+  .style.display = "block";
 
     document.getElementById("email").value = "";
     document.getElementById("password").value = "";
