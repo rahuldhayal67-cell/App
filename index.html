@@ -1414,16 +1414,7 @@ document.getElementById("faceStatus").textContent =
     await loadFaceModels();
     await prepareReferenceFaces();
 
-  try{
-
-    const stream = await navigator.mediaDevices.getUserMedia({
-      video:{
-        facingMode:"user"
-      },
-      audio:true
-    });
-
-    video.srcObject = stream;
+  
 
    const number =
   Math.floor(1000 + Math.random() * 9000);
