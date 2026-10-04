@@ -2288,8 +2288,9 @@ recognition.onend = function(){
     );
 
     alert(
-      "Payment verification failed. Please contact support."
-    );
+  "Verification error: " +
+  (verifyError?.message || JSON.stringify(verifyError))
+);
 
     return;
   }
