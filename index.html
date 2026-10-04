@@ -1080,6 +1080,12 @@ localStorage.setItem("onboardingStep", "profile");
     .forEach(input => {
       input.checked = savedInterests.includes(input.value);
     });
+    if(profile.onboarding_completed === true){
+
+  showMainPage();
+  return;
+
+}
     const onboardingStep =
   localStorage.getItem("onboardingStep");
 
@@ -2040,10 +2046,34 @@ clearInterval(faceCheckTimer);
     verification.subscription
   );
 
+const { error: onboardingError } =
+  await db
+    .from("profiles")
+    .update({
+      onboarding_completed: true
+    })
+    .eq("user_id", user.id);
+
+if(onboardingError){
+
+  console.error(
+    "Failed to save onboarding status:",
+    onboardingError
+  );
 
   alert(
-    "Payment successful! Your subscription is now active."
+    "Payment was successful, but account setup could not be completed."
   );
+
+  return;
+}
+
+localStorage.setItem(
+  "onboardingStep",
+  "main"
+);
+
+window.location.reload();
 
 },
 
