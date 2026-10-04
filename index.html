@@ -1086,6 +1086,13 @@ localStorage.setItem("onboardingStep", "profile");
   return;
 
 }
+   
+  if(profile.onboarding_completed === true){
+
+  showMainPage();
+  return;
+
+}  
     const onboardingStep =
   localStorage.getItem("onboardingStep");
 
