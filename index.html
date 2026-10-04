@@ -2129,8 +2129,21 @@ if(
 };
 recognition.onend = function(){
 
-  if(secondsLeft <= 0 || voiceVerified || !challengeActive){
-    return;
+  if(
+    secondsLeft > 0 &&
+    !voiceVerified &&
+    challengeActive
+  ){
+
+    setTimeout(function(){
+
+      try{
+        recognition.start();
+      }catch(error){
+      }
+
+    }, 300);
+
   }
 
 };
