@@ -1937,10 +1937,13 @@ window.verificationNumber = number;
 
 }
   function openSubscriptionPage(){
-localStorage.setItem("onboardingStep", "subscription");
+
+  localStorage.setItem("onboardingStep", "subscription");
+
   const video =
     document.getElementById("verificationCamera");
 
+  // Stop camera and microphone
   if(video.srcObject){
 
     video.srcObject
@@ -1950,16 +1953,24 @@ localStorage.setItem("onboardingStep", "subscription");
     video.srcObject = null;
 
   }
-    if(window.voiceRecognition){
 
-  try{
-    window.voiceRecognition.stop();
-  }catch(error){
+  // Completely stop voice recognition
+  if(window.voiceRecognition){
+
+    try{
+
+      window.voiceRecognition.onend = null;
+      window.voiceRecognition.onerror = null;
+      window.voiceRecognition.onresult = null;
+
+      window.voiceRecognition.stop();
+
+    }catch(error){
+    }
+
+    window.voiceRecognition = null;
+
   }
-
-  window.voiceRecognition = null;
-
-}
 
   document.getElementById("verificationPage").style.display = "none";
   document.getElementById("verificationPage").classList.add("hidden");
