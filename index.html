@@ -192,6 +192,96 @@ select option {
     color:#fff;
   }
 }
+    /* ================================
+   CONNECT MAIN PAGE
+   Automatic Light / Dark Mode
+================================ */
+
+#mainPage{
+  --main-bg: #f7f7f7;
+  --main-card: #ffffff;
+  --main-text: #111111;
+  --main-secondary: #6b6b6b;
+  --main-border: #e5e5e5;
+
+  background: var(--main-bg) !important;
+  color: var(--main-text);
+}
+
+#mainPage .main-header{
+  background: var(--main-card);
+  color: var(--main-text);
+  border-bottom: 1px solid var(--main-border);
+}
+
+#mainPage .main-logo{
+  color: var(--main-text);
+}
+
+#mainPage .main-icon-btn{
+  background: var(--main-card);
+  color: var(--main-text);
+  border: 1px solid var(--main-border);
+}
+
+#mainPage .discover-title{
+  color: var(--main-text);
+}
+
+#mainPage .profile-card{
+  background: var(--main-card);
+  color: var(--main-text);
+  border: 1px solid var(--main-border);
+  box-shadow: 0 4px 18px rgba(0,0,0,0.08);
+}
+
+#mainPage .profile-name{
+  color: var(--main-text);
+}
+
+#mainPage .profile-info,
+#mainPage .profile-bio{
+  color: var(--main-secondary);
+}
+
+#mainPage .photo-placeholder{
+  background: var(--main-bg);
+  color: var(--main-secondary);
+}
+
+#mainPage .pass-btn{
+  background: var(--main-card);
+  color: var(--main-text);
+  border: 1px solid var(--main-border);
+}
+
+#mainPage .like-btn{
+  background: #ff3158;
+  color: white;
+  border: none;
+}
+
+#mainPage .logout-btn{
+  background: transparent;
+  color: var(--main-secondary);
+  border: 1px solid var(--main-border);
+}
+
+@media (prefers-color-scheme: dark){
+
+  #mainPage{
+    --main-bg: #000000;
+    --main-card: #1c1c1e;
+    --main-text: #ffffff;
+    --main-secondary: #aaaaaa;
+    --main-border: #38383a;
+  }
+
+  #mainPage .profile-card{
+    box-shadow: 0 4px 18px rgba(0,0,0,0.35);
+  }
+
+}
 </style>
   <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 </head>
@@ -524,7 +614,10 @@ select option {
 </button>
 
 </div>
- <!-- MAIN PAGE -->
+ <!-- ================================
+     CONNECT MAIN PAGE
+================================ -->
+
 <div id="mainPage"
      class="hidden"
      style="
@@ -532,42 +625,61 @@ select option {
        position:fixed;
        inset:0;
        z-index:9999;
-       background:#f7f7f7;
        overflow-y:auto;
      ">
 
-  <!-- TOP BAR -->
-  <div style="
-    height:64px;
-    background:white;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    padding:0 18px;
-    box-shadow:0 1px 6px rgba(0,0,0,0.08);
-  ">
+  <!-- HEADER -->
 
-    <div style="
-      font-size:22px;
-      font-weight:bold;
-    ">
-      Connect ❤️
+  <div class="main-header"
+       style="
+         position:sticky;
+         top:0;
+         z-index:10;
+         height:64px;
+         display:flex;
+         align-items:center;
+         justify-content:space-between;
+         padding:0 16px;
+         box-sizing:border-box;
+       ">
+
+    <div class="main-logo"
+         style="
+           font-size:22px;
+           font-weight:700;
+         ">
+      Connect <span>♥</span>
     </div>
 
     <div style="
       display:flex;
+      align-items:center;
       gap:8px;
     ">
 
       <button
-        onclick="alert('Messages will be added later 💬')"
-        style="width:auto;padding:8px 12px;">
+        class="main-icon-btn"
+        onclick="alert('Messages will be added next.')"
+        style="
+          width:44px;
+          height:44px;
+          padding:0;
+          border-radius:50%;
+          font-size:20px;
+        ">
         💬
       </button>
 
       <button
-        onclick="alert('Profile will be added later 👤')"
-        style="width:auto;padding:8px 12px;">
+        class="main-icon-btn"
+        onclick="alert('Profile will be added next.')"
+        style="
+          width:44px;
+          height:44px;
+          padding:0;
+          border-radius:50%;
+          font-size:20px;
+        ">
         👤
       </button>
 
@@ -576,152 +688,157 @@ select option {
   </div>
 
 
-  <!-- MAIN CONTENT -->
+  <!-- DISCOVER -->
+
   <div style="
+    width:100%;
     max-width:600px;
-    margin:30px auto;
-    padding:20px;
+    margin:0 auto;
+    padding:24px 16px 40px;
+    box-sizing:border-box;
   ">
 
-    <div style="
-      background:white;
-      border-radius:20px;
-      padding:30px 20px;
-      text-align:center;
-      box-shadow:0 2px 12px rgba(0,0,0,0.08);
-    ">
+    <h2 class="discover-title"
+        style="
+          margin:5px 0 18px;
+          font-size:25px;
+        ">
+      Discover
+    </h2>
 
-      <div style="
-        font-size:60px;
-        margin-bottom:10px;
-      ">
-        ❤️
+
+    <!-- PROFILE CARD -->
+
+    <div class="profile-card"
+         style="
+           width:100%;
+           border-radius:24px;
+           overflow:hidden;
+           box-sizing:border-box;
+         ">
+
+      <!-- PHOTO -->
+
+      <div class="photo-placeholder"
+           style="
+             width:100%;
+             aspect-ratio:3 / 4;
+             display:flex;
+             align-items:center;
+             justify-content:center;
+             font-size:60px;
+           ">
+
+        👤
+
       </div>
 
-      <h2>
-        Welcome to Connect
-      </h2>
 
-      <p class="small">
-        Your profile is verified and your subscription is active.
-      </p>
+      <!-- PROFILE INFORMATION -->
 
-      <button
-        onclick="alert('Discover feature will be added later.')">
-        Start Discovering
-      </button>
+      <div style="
+        padding:20px;
+      ">
+
+        <div class="profile-name"
+             style="
+               font-size:25px;
+               font-weight:700;
+               margin-bottom:6px;
+             ">
+
+          Discover Profiles
+
+        </div>
+
+        <div class="profile-info"
+             style="
+               font-size:15px;
+               margin-bottom:14px;
+             ">
+
+          📍 City · Age
+
+        </div>
+
+        <div class="profile-bio"
+             style="
+               font-size:15px;
+               line-height:1.5;
+             ">
+
+          Profiles from Connect will appear here.
+
+        </div>
+
+      </div>
 
     </div>
 
 
-    <!-- LOGOUT -->
-    <button
-      onclick="logout()"
-      style="margin-top:25px;">
-      Logout
-    </button>
-
-  </div>
-
-</div><!-- MAIN PAGE -->
-<div id="mainPage"
-     class="hidden"
-     style="
-       display:none;
-       position:fixed;
-       inset:0;
-       z-index:9999;
-       background:#f7f7f7;
-       overflow-y:auto;
-     ">
-
-  <!-- TOP BAR -->
-  <div style="
-    height:64px;
-    background:white;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    padding:0 18px;
-    box-shadow:0 1px 6px rgba(0,0,0,0.08);
-  ">
-
-    <div style="
-      font-size:22px;
-      font-weight:bold;
-    ">
-      Connect ❤️
-    </div>
+    <!-- ACTION BUTTONS -->
 
     <div style="
       display:flex;
-      gap:8px;
+      justify-content:center;
+      align-items:center;
+      gap:28px;
+      margin-top:22px;
     ">
 
       <button
-        onclick="alert('Messages will be added later 💬')"
-        style="width:auto;padding:8px 12px;">
-        💬
+        class="pass-btn"
+        onclick="alert('Pass feature will be added next.')"
+        style="
+          width:62px;
+          height:62px;
+          padding:0;
+          border-radius:50%;
+          font-size:26px;
+        ">
+
+        ❌
+
       </button>
+
 
       <button
-        onclick="alert('Profile will be added later 👤')"
-        style="width:auto;padding:8px 12px;">
-        👤
-      </button>
+        class="like-btn"
+        onclick="alert('Like feature will be added next.')"
+        style="
+          width:70px;
+          height:70px;
+          padding:0;
+          border-radius:50%;
+          font-size:30px;
+        ">
 
-    </div>
-
-  </div>
-
-
-  <!-- MAIN CONTENT -->
-  <div style="
-    max-width:600px;
-    margin:30px auto;
-    padding:20px;
-  ">
-
-    <div style="
-      background:white;
-      border-radius:20px;
-      padding:30px 20px;
-      text-align:center;
-      box-shadow:0 2px 12px rgba(0,0,0,0.08);
-    ">
-
-      <div style="
-        font-size:60px;
-        margin-bottom:10px;
-      ">
         ❤️
-      </div>
 
-      <h2>
-        Welcome to Connect
-      </h2>
-
-      <p class="small">
-        Your profile is verified and your subscription is active.
-      </p>
-
-      <button
-        onclick="alert('Discover feature will be added later.')">
-        Start Discovering
       </button>
 
     </div>
 
 
     <!-- LOGOUT -->
+
     <button
+      class="logout-btn"
       onclick="logout()"
-      style="margin-top:25px;">
+      style="
+        width:100%;
+        margin-top:35px;
+        padding:12px;
+        border-radius:12px;
+      ">
+
       Logout
+
     </button>
 
   </div>
 
+</div>
 </div> 
 
 <p id="profileMsg" class="small"></p>
