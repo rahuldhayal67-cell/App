@@ -841,6 +841,48 @@ const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 let discoverProfiles = [];
 let discoverIndex = 0;
 let currentDiscoverProfile = null;
+  async function loadDiscoverProfiles(){
+
+  const { data: { user } } = await db.auth.getUser();
+
+  if(!user){
+    return;
+  }
+
+  // Get profiles already acted on by this user
+  const { data: actions, error: actionsError } = await db
+    .from("profile_actions")
+    .select("target_user_id")
+    .eq("user_id", user.id);
+
+  if(actionsError){
+    console.error("Action load error:", actionsError);
+    return;
+  }
+
+  const actedUserIds =
+    (actions || []).map(action => action.target_user_id);
+
+  // Get all completed profiles except yourself
+  const { data: profiles, error: profilesError } = await db
+    .from("profiles")
+    .select("*")
+    .eq("onboarding_completed", true)
+    .neq("user_id", user.id);
+
+  if(profilesError){
+    console.error("Profile load error:", profilesError);
+    return;
+  }
+
+  discoverProfiles = (profiles || []).filter(profile =>
+    !actedUserIds.includes(profile.user_id)
+  );
+
+  discoverIndex = 0;
+
+  await showNextDiscoverProfile();
+}
 db.auth.onAuthStateChange((event, session) => {
 
   if(event === "PASSWORD_RECOVERY"){
