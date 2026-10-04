@@ -625,7 +625,7 @@ select option {
        position:fixed;
        inset:0;
        z-index:9999;
-       overflow-y:auto;
+       overflow:hidden;
      ">
 
   <!-- HEADER -->
@@ -722,7 +722,9 @@ select option {
       <div class="photo-placeholder"
            style="
              width:100%;
-             aspect-ratio:3 / 4;
+             height:calc(100vh - 300px);
+             min-height:300px;
+             max-height:480px;
              display:flex;
              align-items:center;
              justify-content:center;
@@ -768,7 +770,7 @@ select option {
       justify-content:center;
       align-items:center;
       gap:28px;
-      margin-top:22px;
+      margin-top:12px;
     ">
 
       <button
@@ -812,7 +814,7 @@ select option {
       onclick="logout()"
       style="
         width:100%;
-        margin-top:35px;
+        margin-top:12px;
         padding:12px;
         border-radius:12px;
       ">
