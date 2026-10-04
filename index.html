@@ -524,6 +524,205 @@ select option {
 </button>
 
 </div>
+ <!-- MAIN PAGE -->
+<div id="mainPage"
+     class="hidden"
+     style="
+       display:none;
+       position:fixed;
+       inset:0;
+       z-index:9999;
+       background:#f7f7f7;
+       overflow-y:auto;
+     ">
+
+  <!-- TOP BAR -->
+  <div style="
+    height:64px;
+    background:white;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 18px;
+    box-shadow:0 1px 6px rgba(0,0,0,0.08);
+  ">
+
+    <div style="
+      font-size:22px;
+      font-weight:bold;
+    ">
+      Connect ❤️
+    </div>
+
+    <div style="
+      display:flex;
+      gap:8px;
+    ">
+
+      <button
+        onclick="alert('Messages will be added later 💬')"
+        style="width:auto;padding:8px 12px;">
+        💬
+      </button>
+
+      <button
+        onclick="alert('Profile will be added later 👤')"
+        style="width:auto;padding:8px 12px;">
+        👤
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <!-- MAIN CONTENT -->
+  <div style="
+    max-width:600px;
+    margin:30px auto;
+    padding:20px;
+  ">
+
+    <div style="
+      background:white;
+      border-radius:20px;
+      padding:30px 20px;
+      text-align:center;
+      box-shadow:0 2px 12px rgba(0,0,0,0.08);
+    ">
+
+      <div style="
+        font-size:60px;
+        margin-bottom:10px;
+      ">
+        ❤️
+      </div>
+
+      <h2>
+        Welcome to Connect
+      </h2>
+
+      <p class="small">
+        Your profile is verified and your subscription is active.
+      </p>
+
+      <button
+        onclick="alert('Discover feature will be added later.')">
+        Start Discovering
+      </button>
+
+    </div>
+
+
+    <!-- LOGOUT -->
+    <button
+      onclick="logout()"
+      style="margin-top:25px;">
+      Logout
+    </button>
+
+  </div>
+
+</div><!-- MAIN PAGE -->
+<div id="mainPage"
+     class="hidden"
+     style="
+       display:none;
+       position:fixed;
+       inset:0;
+       z-index:9999;
+       background:#f7f7f7;
+       overflow-y:auto;
+     ">
+
+  <!-- TOP BAR -->
+  <div style="
+    height:64px;
+    background:white;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 18px;
+    box-shadow:0 1px 6px rgba(0,0,0,0.08);
+  ">
+
+    <div style="
+      font-size:22px;
+      font-weight:bold;
+    ">
+      Connect ❤️
+    </div>
+
+    <div style="
+      display:flex;
+      gap:8px;
+    ">
+
+      <button
+        onclick="alert('Messages will be added later 💬')"
+        style="width:auto;padding:8px 12px;">
+        💬
+      </button>
+
+      <button
+        onclick="alert('Profile will be added later 👤')"
+        style="width:auto;padding:8px 12px;">
+        👤
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <!-- MAIN CONTENT -->
+  <div style="
+    max-width:600px;
+    margin:30px auto;
+    padding:20px;
+  ">
+
+    <div style="
+      background:white;
+      border-radius:20px;
+      padding:30px 20px;
+      text-align:center;
+      box-shadow:0 2px 12px rgba(0,0,0,0.08);
+    ">
+
+      <div style="
+        font-size:60px;
+        margin-bottom:10px;
+      ">
+        ❤️
+      </div>
+
+      <h2>
+        Welcome to Connect
+      </h2>
+
+      <p class="small">
+        Your profile is verified and your subscription is active.
+      </p>
+
+      <button
+        onclick="alert('Discover feature will be added later.')">
+        Start Discovering
+      </button>
+
+    </div>
+
+
+    <!-- LOGOUT -->
+    <button
+      onclick="logout()"
+      style="margin-top:25px;">
+      Logout
+    </button>
+
+  </div>
+
+</div> 
 
 <p id="profileMsg" class="small"></p>
 <button onclick="logout()">Logout</button>
@@ -791,6 +990,25 @@ localStorage.setItem("onboardingStep", "profile");
   document.getElementById("photoPage").classList.add("hidden");
 
   document.getElementById("profilePage").style.display = "block";
+
+}
+
+  function showMainPage(){
+
+  document.getElementById("profilePage").style.display = "none";
+  document.getElementById("profilePage").classList.add("hidden");
+
+  document.getElementById("photoPage").style.display = "none";
+  document.getElementById("photoPage").classList.add("hidden");
+
+  document.getElementById("verificationPage").style.display = "none";
+  document.getElementById("verificationPage").classList.add("hidden");
+
+  document.getElementById("subscriptionPage").style.display = "none";
+  document.getElementById("subscriptionPage").classList.add("hidden");
+
+  document.getElementById("mainPage").classList.remove("hidden");
+  document.getElementById("mainPage").style.display = "block";
 
 }
   async function showApp(user){
