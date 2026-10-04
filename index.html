@@ -1282,8 +1282,14 @@ async function showApp(user){
   }
 
   if(!profile){
-    return;
-  }
+
+  document.getElementById("app").classList.remove("hidden");
+  document.getElementById("app").style.display = "block";
+
+  document.getElementById("profilePage").style.display = "block";
+
+  return;
+}
 
   document.getElementById("name").value =
     profile.name || "";
@@ -1333,6 +1339,8 @@ async function showApp(user){
   return;
 
 }  
+  document.getElementById("app").classList.remove("hidden");
+document.getElementById("app").style.display = "block";
     const onboardingStep =
   localStorage.getItem("onboardingStep");
 
