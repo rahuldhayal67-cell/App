@@ -2118,13 +2118,10 @@ if(
 
 }
     };
-    recognition.onerror = function(){
+    recognition.onerror = function(event){
 
-  if(secondsLeft > 0){
-
-    // Keep the number and countdown visible.
-
-  }
+  document.getElementById("voiceStatus").textContent =
+    "Voice error: " + event.error;
 
 };
 recognition.onend = function(){
