@@ -2010,6 +2010,7 @@ document.getElementById("voiceStatus").textContent = "";
 let faceVerified = false;
 let faceMatchCount = 0;
 let voiceVerified = false;
+let challengeActive = true;
 const faceCheckTimer = setInterval(async function(){
 
   try{
@@ -2019,10 +2020,6 @@ const faceCheckTimer = setInterval(async function(){
     if(matched){
 
       faceMatchCount++;
-
-    }else{
-
-      faceMatchCount = 0;
 
     }
 
@@ -2045,8 +2042,8 @@ const faceCheckTimer = setInterval(async function(){
 
 }, 500);
     recognition.lang = "en-IN";
-    recognition.continuous = false;
-    recognition.interimResults = false;
+recognition.continuous = true;
+recognition.interimResults = false;
 
     window.voiceRecognition = recognition;
 
@@ -2087,8 +2084,10 @@ const faceCheckTimer = setInterval(async function(){
           );
       });
 
-      if(
-  convertedText.includes(expected) &&
+      const spokenDigits = convertedText.replace(/\D/g, "");
+
+if(
+  spokenDigits.includes(expected) &&
   secondsLeft > 0
 ){
 
@@ -2130,12 +2129,20 @@ const faceCheckTimer = setInterval(async function(){
 };
 recognition.onend = function(){
 
-  if(secondsLeft > 0 && !voiceVerified){
+  if(
+    secondsLeft > 0 &&
+    !voiceVerified &&
+    challengeActive
+  ){
 
-    try{
-      recognition.start();
-    }catch(error){
-    }
+    setTimeout(function(){
+
+      try{
+        recognition.start();
+      }catch(error){
+      }
+
+    }, 200);
 
   }
 
@@ -2159,8 +2166,11 @@ recognition.onend = function(){
 
       if(secondsLeft <= 0){
 
-        clearInterval(countdownTimer);
-clearInterval(faceCheckTimer);
+      challengeActive = false;
+
+      clearInterval(countdownTimer);
+        
+      clearInterval(faceCheckTimer);
         try{
           recognition.stop();
         }catch(error){
