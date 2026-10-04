@@ -572,7 +572,7 @@ select option {
     Start Verification
   </button>
 
-</button>
+
 
 </div>
 
@@ -838,7 +838,7 @@ select option {
 
   </div>
 
-</div>
+
 </div> 
 
 <p id="profileMsg" class="small"></p>
@@ -1197,12 +1197,6 @@ localStorage.setItem("onboardingStep", "profile");
     .forEach(input => {
       input.checked = savedInterests.includes(input.value);
     });
-    if(profile.onboarding_completed === true){
-
-  showMainPage();
-  return;
-
-}
    
   if(profile.onboarding_completed === true){
 
