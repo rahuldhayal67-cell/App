@@ -1224,6 +1224,35 @@ localStorage.setItem("onboardingStep", "profile");
     loadDiscoverProfiles();
 
 }
+  async function swipeProfile(action){
+
+  if(!currentDiscoverProfile){
+    return;
+  }
+
+  const { data: { user } } = await db.auth.getUser();
+
+  if(!user){
+    return;
+  }
+
+  const { error } = await db
+    .from("profile_actions")
+    .insert({
+      user_id: user.id,
+      target_user_id: currentDiscoverProfile.user_id,
+      action: action
+    });
+
+  if(error){
+    console.error("Swipe action error:", error);
+    return;
+  }
+
+  discoverIndex++;
+
+  await showNextDiscoverProfile();
+}
   async function showApp(user){
 
   document.getElementById("auth").classList.add("hidden");
