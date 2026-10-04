@@ -834,6 +834,13 @@ const SUPABASE_URL = "https://pgperzhczsoifkvdwshd.supabase.co";
 const SUPABASE_KEY = "sb_publishable_q2Ph4B0MXko-tkYPnB2-nA_cleEm3mh";
 
 const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  // ================================
+// DISCOVER / SWIPE PROFILES
+// ================================
+
+let discoverProfiles = [];
+let discoverIndex = 0;
+let currentDiscoverProfile = null;
 db.auth.onAuthStateChange((event, session) => {
 
   if(event === "PASSWORD_RECOVERY"){
