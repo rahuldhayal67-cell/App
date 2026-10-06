@@ -1206,9 +1206,9 @@ localStorage.setItem("onboardingStep", "profile");
 }
 
   function showMainPage(){
-    document.getElementById("app").classList.remove("hidden");
-document.getElementById("app").style.display = "block";
-
+  document.getElementById("app").classList.remove("hidden");
+  document.getElementById("app").style.display = "block";
+  document.getElementById("app").style.overflow = "hidden";
   document.getElementById("profilePage").style.display = "none";
   document.getElementById("profilePage").classList.add("hidden");
 
