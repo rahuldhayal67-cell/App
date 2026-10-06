@@ -841,6 +841,8 @@ const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 let discoverProfiles = [];
 let discoverIndex = 0;
 let currentDiscoverProfile = null;
+let currentPhotoFiles = [];
+let currentPhotoIndex = 0;
   async function loadDiscoverProfiles(){
 
   const { data: { user } } = await db.auth.getUser();
@@ -905,41 +907,44 @@ let currentDiscoverProfile = null;
     "📍 " + (profile.city || profile.district || profile.state || "Location not available");
 
   const photoBox =
-    document.querySelector(".photo-placeholder");
+  document.querySelector(".photo-placeholder");
 
-  photoBox.innerHTML = "👤";
+photoBox.innerHTML = "👤";
 
-  const { data: files, error } =
-    await db.storage
-      .from("profile-photos")
-      .list(profile.user_id);
+const { data: files, error } =
+  await db.storage
+    .from("profile-photos")
+    .list(profile.user_id);
 
-  if(error){
-    console.error("Photo load error:", error);
-    return;
-  }
+if(error){
+  console.error("Photo load error:", error);
+  return;
+}
 
-  const imageFiles = (files || []).filter(file =>
-    file.name && !file.name.endsWith("/")
-  );
+currentPhotoFiles = (files || []).filter(file =>
+  file.name && !file.name.endsWith("/")
+);
 
-  if(imageFiles.length === 0){
-    return;
-  }
+currentPhotoIndex = 0;
+
+if(currentPhotoFiles.length === 0){
+  return;
+}
+
+function showCurrentPhoto(){
+  const file = currentPhotoFiles[currentPhotoIndex];
 
   const { data: urlData } =
     db.storage
       .from("profile-photos")
       .getPublicUrl(
-        profile.user_id + "/" + imageFiles[0].name
+        profile.user_id + "/" + file.name
       );
 
   if(urlData && urlData.publicUrl){
-
     photoBox.innerHTML = "";
 
     const img = document.createElement("img");
-
     img.src = urlData.publicUrl;
     img.style.width = "100%";
     img.style.height = "100%";
@@ -948,6 +953,22 @@ let currentDiscoverProfile = null;
     photoBox.appendChild(img);
   }
 }
+
+showCurrentPhoto();
+
+photoBox.onclick = function(){
+  if(currentPhotoFiles.length <= 1){
+    return;
+  }
+
+  currentPhotoIndex++;
+
+  if(currentPhotoIndex >= currentPhotoFiles.length){
+    currentPhotoIndex = 0;
+  }
+
+  showCurrentPhoto();
+};
 db.auth.onAuthStateChange((event, session) => {
 
   if(event === "PASSWORD_RECOVERY"){
