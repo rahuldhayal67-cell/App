@@ -1499,6 +1499,59 @@ db.auth.getSession().then(({data})=>{
     showAuth();
   }
 });
+
+  async function compressImage(file){
+
+  const img = new Image();
+
+  const objectUrl = URL.createObjectURL(file);
+
+  img.src = objectUrl;
+
+  await new Promise(resolve => {
+    img.onload = resolve;
+  });
+
+  const maxSize = 1200;
+
+  let width = img.width;
+  let height = img.height;
+
+  if(width > height){
+    if(width > maxSize){
+      height = Math.round(height * maxSize / width);
+      width = maxSize;
+    }
+  }else{
+    if(height > maxSize){
+      width = Math.round(width * maxSize / height);
+      height = maxSize;
+    }
+  }
+
+  const canvas = document.createElement("canvas");
+
+  canvas.width = width;
+  canvas.height = height;
+
+  const ctx = canvas.getContext("2d");
+
+  ctx.drawImage(img, 0, 0, width, height);
+
+  URL.revokeObjectURL(objectUrl);
+
+  return new Promise(resolve => {
+
+    canvas.toBlob(
+      blob => resolve(blob),
+      "image/jpeg",
+      0.75
+    );
+
+  });
+
+}
+  
   async function uploadProfilePhotos(){
 
   const files =
@@ -1549,14 +1602,29 @@ if(files.length === 0){
 
     const file = files[i];
 
-    const filePath =
-      folder + "/photo-" + (i + 1) + "." +
-      file.name.split(".").pop();
+    const file = files[i];
 
-    const { error } =
-      await db.storage
-        .from("profile-photos")
-       .upload(filePath, file, { upsert: true });
+const compressedBlob =
+  await compressImage(file);
+
+const compressedFile =
+  new File(
+    [compressedBlob],
+    "photo-" + (i + 1) + ".jpg",
+    { type: "image/jpeg" }
+  );
+
+const filePath =
+  folder + "/photo-" + (i + 1) + ".jpg";
+
+const { error } =
+  await db.storage
+    .from("profile-photos")
+    .upload(
+      filePath,
+      compressedFile,
+      { upsert: true }
+    );
 
     if(error){
       alert("Photo upload failed: " + error.message);
