@@ -1370,6 +1370,8 @@ localStorage.setItem("onboardingStep", "profile");
   document.getElementById("app").classList.remove("hidden");
   document.getElementById("app").style.display = "block";
   document.getElementById("app").style.overflow = "hidden";
+    document.documentElement.style.overflow = "hidden";
+document.body.style.overflow = "hidden";
   document.getElementById("profilePage").style.display = "none";
   document.getElementById("profilePage").classList.add("hidden");
 
