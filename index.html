@@ -1447,12 +1447,20 @@ swipeCard.addEventListener("touchend", async function(){
     setTimeout(resolve, 300)
   );
 
-  swipeCard.style.transform =
-    "translateX(0) rotate(0deg)";
+  swipeCard.style.opacity = "0";
 
-  swipeCard.style.opacity = "1";
+await new Promise(resolve =>
+  setTimeout(resolve, 220)
+);
 
-  await swipeProfile(action);
+await swipeProfile(action);
+
+swipeCard.style.transition = "none";
+
+swipeCard.style.transform =
+  "translateX(0) rotate(0deg)";
+
+swipeCard.style.opacity = "1";
 
 }, {passive:true});
 
