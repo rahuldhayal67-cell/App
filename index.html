@@ -1343,22 +1343,26 @@ localStorage.setItem("onboardingStep", "profile");
     return;
   }
 
+  const targetUserId = currentDiscoverProfile.user_id;
+
+  // Move to next profile immediately
+  discoverIndex++;
+
+  showNextDiscoverProfile();
+
+  // Save swipe in background
   const { error } = await db
     .from("profile_actions")
     .insert({
       user_id: user.id,
-      target_user_id: currentDiscoverProfile.user_id,
+      target_user_id: targetUserId,
       action: action
     });
 
   if(error){
     console.error("Swipe action error:", error);
-    return;
   }
 
-  discoverIndex++;
-
-  await showNextDiscoverProfile();
 }
 // ================================
 // TOUCH SWIPE FOR PROFILE CARD
