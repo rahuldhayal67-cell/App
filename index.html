@@ -234,6 +234,11 @@ select option {
   border: 1px solid var(--main-border);
   box-shadow: 0 4px 18px rgba(0,0,0,0.08);
 }
+    #mainPage .profile-card{
+  touch-action: pan-y;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  will-change: transform;
+}
 
 #mainPage .profile-name{
   color: var(--main-text);
@@ -1279,7 +1284,101 @@ localStorage.setItem("onboardingStep", "profile");
 
   await showNextDiscoverProfile();
 }
+// ================================
+// TOUCH SWIPE FOR PROFILE CARD
+// ================================
 
+let swipeStartX = 0;
+let swipeCurrentX = 0;
+let swipeDragging = false;
+
+const swipeCard =
+  document.querySelector("#mainPage .profile-card");
+
+swipeCard.addEventListener("touchstart", function(e){
+
+  if(e.touches.length !== 1){
+    return;
+  }
+
+  swipeStartX = e.touches[0].clientX;
+  swipeCurrentX = swipeStartX;
+  swipeDragging = true;
+
+  swipeCard.style.transition = "none";
+
+}, {passive:true});
+
+
+swipeCard.addEventListener("touchmove", function(e){
+
+  if(!swipeDragging){
+    return;
+  }
+
+  swipeCurrentX = e.touches[0].clientX;
+
+  const distance =
+    swipeCurrentX - swipeStartX;
+
+  swipeCard.style.transform =
+    "translateX(" + distance + "px) rotate(" +
+    (distance * 0.05) + "deg)";
+
+}, {passive:true});
+
+
+swipeCard.addEventListener("touchend", async function(){
+
+  if(!swipeDragging){
+    return;
+  }
+
+  swipeDragging = false;
+
+  const distance =
+    swipeCurrentX - swipeStartX;
+
+  const threshold = 100;
+
+  if(Math.abs(distance) < threshold){
+
+    swipeCard.style.transition =
+      "transform 0.3s ease";
+
+    swipeCard.style.transform =
+      "translateX(0) rotate(0deg)";
+
+    return;
+  }
+
+  const action =
+    distance > 0 ? "like" : "pass";
+
+  swipeCard.style.transition =
+    "transform 0.3s ease, opacity 0.3s ease";
+
+  swipeCard.style.transform =
+    "translateX(" +
+    (distance > 0 ? window.innerWidth : -window.innerWidth) +
+    "px) rotate(" +
+    (distance > 0 ? 20 : -20) +
+    "deg)";
+
+  swipeCard.style.opacity = "0";
+
+  await new Promise(resolve =>
+    setTimeout(resolve, 300)
+  );
+
+  swipeCard.style.transform =
+    "translateX(0) rotate(0deg)";
+
+  swipeCard.style.opacity = "1";
+
+  await swipeProfile(action);
+
+}, {passive:true});
 
 async function showApp(user){
 
