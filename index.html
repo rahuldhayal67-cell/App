@@ -848,6 +848,7 @@ let discoverIndex = 0;
 let currentDiscoverProfile = null;
 let currentPhotoFiles = [];
 let currentPhotoIndex = 0;
+  let discoverPhotoCache = new Map();
   async function loadDiscoverProfiles(){
 
   const { data: { user } } = await db.auth.getUser();
@@ -890,13 +891,71 @@ let currentPhotoIndex = 0;
 
   await showNextDiscoverProfile();
 }
-  async function showNextDiscoverProfile(){
+ async function preloadDiscoverProfile(profile){
+
+  if(!profile || discoverPhotoCache.has(profile.user_id)){
+    return;
+  }
+
+  const { data: files, error } =
+    await db.storage
+      .from("profile-photos")
+      .list(profile.user_id);
+
+  if(error){
+    console.error("Photo preload error:", error);
+    return;
+  }
+
+  const photoFiles = (files || []).filter(file =>
+    file.name && !file.name.endsWith("/")
+  );
+
+  if(photoFiles.length === 0){
+    discoverPhotoCache.set(profile.user_id, []);
+    return;
+  }
+
+  const photos = photoFiles.map(file => {
+
+    const { data: urlData } =
+      db.storage
+        .from("profile-photos")
+        .getPublicUrl(
+          profile.user_id + "/" + file.name
+        );
+
+    return {
+      name: file.name,
+      url: urlData.publicUrl
+    };
+
+  });
+
+  discoverPhotoCache.set(profile.user_id, photos);
+
+  // Preload first photo into browser memory
+  const img = new Image();
+  img.src = photos[0].url;
+
+  try{
+    await img.decode();
+  }catch(error){}
+
+}
+
+
+async function showNextDiscoverProfile(){
 
   if(discoverIndex >= discoverProfiles.length){
+
     document.querySelector(".photo-placeholder").innerHTML = "💫";
-    document.querySelector(".profile-name").textContent = "No more profiles";
+    document.querySelector(".profile-name").textContent =
+      "No more profiles";
     document.querySelector(".profile-info").textContent = "";
+
     currentDiscoverProfile = null;
+
     return;
   }
 
@@ -909,73 +968,90 @@ let currentPhotoIndex = 0;
     (profile.age ? ", " + profile.age : "");
 
   document.querySelector(".profile-info").textContent =
-    "📍 " + (profile.city || profile.district || profile.state || "Location not available");
+    "📍 " +
+    (profile.city ||
+     profile.district ||
+     profile.state ||
+     "Location not available");
 
   const photoBox =
-  document.querySelector(".photo-placeholder");
+    document.querySelector(".photo-placeholder");
 
-photoBox.innerHTML = "👤";
+  let photos =
+    discoverPhotoCache.get(profile.user_id);
 
-const { data: files, error } =
-  await db.storage
-    .from("profile-photos")
-    .list(profile.user_id);
+  // If not cached yet, load them
+  if(!photos){
 
-if(error){
-  console.error("Photo load error:", error);
-  return;
+    await preloadDiscoverProfile(profile);
+
+    photos =
+      discoverPhotoCache.get(profile.user_id);
+  }
+
+  currentPhotoFiles = photos || [];
+
+  currentPhotoIndex = 0;
+
+  if(currentPhotoFiles.length === 0){
+
+    photoBox.innerHTML = "👤";
+
+  }else{
+
+    function showCurrentPhoto(){
+
+      const photo =
+        currentPhotoFiles[currentPhotoIndex];
+
+      if(!photo){
+        return;
+      }
+
+      photoBox.innerHTML = "";
+
+      const img =
+        document.createElement("img");
+
+      img.src = photo.url;
+
+      img.style.width = "100%";
+      img.style.height = "100%";
+      img.style.objectFit = "contain";
+
+      photoBox.appendChild(img);
+    }
+
+    showCurrentPhoto();
+
+    photoBox.onclick = function(){
+
+      if(currentPhotoFiles.length <= 1){
+        return;
+      }
+
+      currentPhotoIndex++;
+
+      if(currentPhotoIndex >= currentPhotoFiles.length){
+        currentPhotoIndex = 0;
+      }
+
+      showCurrentPhoto();
+    };
+
+  }
+
+  // PRELOAD THE NEXT PROFILE
+  const nextProfile =
+    discoverProfiles[discoverIndex + 1];
+
+  if(nextProfile){
+
+    preloadDiscoverProfile(nextProfile);
+
+  }
+
 }
-
-currentPhotoFiles = (files || []).filter(file =>
-  file.name && !file.name.endsWith("/")
-);
-
-currentPhotoIndex = 0;
-
-if(currentPhotoFiles.length === 0){
-  return;
-}
-
-function showCurrentPhoto(){
-  const file = currentPhotoFiles[currentPhotoIndex];
-
-  const { data: urlData } =
-    db.storage
-      .from("profile-photos")
-      .getPublicUrl(
-        profile.user_id + "/" + file.name
-      );
-
-  if(urlData && urlData.publicUrl){
-    photoBox.innerHTML = "";
-
-    const img = document.createElement("img");
-    img.src = urlData.publicUrl;
-    img.style.width = "100%";
-    img.style.height = "100%";
-    img.style.objectFit = "contain";
-
-    photoBox.appendChild(img);
-  }
-}
-
-showCurrentPhoto();
-
-photoBox.onclick = function(){
-  if(currentPhotoFiles.length <= 1){
-    return;
-  }
-
-  currentPhotoIndex++;
-
-  if(currentPhotoIndex >= currentPhotoFiles.length){
-    currentPhotoIndex = 0;
-  }
-
-  showCurrentPhoto();
-};
-
-  }
   
 db.auth.onAuthStateChange((event, session) => {
 
