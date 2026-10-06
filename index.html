@@ -949,20 +949,37 @@ async function showNextDiscoverProfile(){
 
   if(discoverIndex >= discoverProfiles.length){
 
-    document.querySelector(".photo-placeholder").innerHTML = "💫";
-    document.querySelector(".profile-name").textContent =
-      "No more profiles";
-    document.querySelector(".profile-info").textContent = "";
+  const photoBox =
+    document.querySelector(".photo-placeholder");
 
-    currentDiscoverProfile = null;
+  photoBox.innerHTML = "💫";
 
-    return;
-  }
+  // Stop old photo tap action
+  photoBox.onclick = null;
+
+  // Clear old photos
+  currentPhotoFiles = [];
+  currentPhotoIndex = 0;
+
+  document.querySelector(".profile-name").textContent =
+    "No more profiles";
+
+  document.querySelector(".profile-info").textContent = "";
+
+  currentDiscoverProfile = null;
+
+  // Disable Like / Pass buttons
+  document.querySelector(".pass-btn").disabled = true;
+  document.querySelector(".like-btn").disabled = true;
+
+  return;
+}
 
   const profile = discoverProfiles[discoverIndex];
 
   currentDiscoverProfile = profile;
-
+document.querySelector(".pass-btn").disabled = false;
+document.querySelector(".like-btn").disabled = false;
   const photoBox =
     document.querySelector(".photo-placeholder");
 
