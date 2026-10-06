@@ -963,6 +963,10 @@ async function showNextDiscoverProfile(){
 
   currentDiscoverProfile = profile;
 
+  const photoBox =
+    document.querySelector(".photo-placeholder");
+
+  // Show name and location immediately
   document.querySelector(".profile-name").textContent =
     (profile.name || "Unknown") +
     (profile.age ? ", " + profile.age : "");
@@ -974,74 +978,53 @@ async function showNextDiscoverProfile(){
      profile.state ||
      "Location not available");
 
-  const photoBox =
-    document.querySelector(".photo-placeholder");
-
+  // Get cached photos
   let photos =
     discoverPhotoCache.get(profile.user_id);
 
-  // If not cached yet, load them
-  if(!photos){
+  // If photos are already cached, show immediately
+  if(photos){
 
-    await preloadDiscoverProfile(profile);
-
-    photos =
-      discoverPhotoCache.get(profile.user_id);
-  }
-
-  currentPhotoFiles = photos || [];
-
-  currentPhotoIndex = 0;
-
-  if(currentPhotoFiles.length === 0){
-
-    photoBox.innerHTML = "👤";
-
-  }else{
-
-    function showCurrentPhoto(){
-
-      const photo =
-        currentPhotoFiles[currentPhotoIndex];
-
-      if(!photo){
-        return;
-      }
-
-      photoBox.innerHTML = "";
-
-      const img =
-        document.createElement("img");
-
-      img.src = photo.url;
-
-      img.style.width = "100%";
-      img.style.height = "100%";
-      img.style.objectFit = "contain";
-
-      photoBox.appendChild(img);
-    }
+    currentPhotoFiles = photos;
+    currentPhotoIndex = 0;
 
     showCurrentPhoto();
 
-    photoBox.onclick = function(){
+  }else{
 
-      if(currentPhotoFiles.length <= 1){
-        return;
+    // Don't wait for photo loading
+    photoBox.innerHTML = "👤";
+
+    currentPhotoFiles = [];
+    currentPhotoIndex = 0;
+
+    preloadDiscoverProfile(profile).then(() => {
+
+      // Make sure user is still looking at this profile
+      if(
+        currentDiscoverProfile &&
+        currentDiscoverProfile.user_id === profile.user_id
+      ){
+
+        const loadedPhotos =
+          discoverPhotoCache.get(profile.user_id);
+
+        if(loadedPhotos && loadedPhotos.length > 0){
+
+          currentPhotoFiles = loadedPhotos;
+          currentPhotoIndex = 0;
+
+          showCurrentPhoto();
+
+        }
+
       }
 
-      currentPhotoIndex++;
-
-      if(currentPhotoIndex >= currentPhotoFiles.length){
-        currentPhotoIndex = 0;
-      }
-
-      showCurrentPhoto();
-    };
+    });
 
   }
 
-  // PRELOAD THE NEXT PROFILE
+  // Preload the following profile in background
   const nextProfile =
     discoverProfiles[discoverIndex + 1];
 
@@ -1050,6 +1033,56 @@ async function showNextDiscoverProfile(){
     preloadDiscoverProfile(nextProfile);
 
   }
+
+
+  // ================================
+  // SHOW CURRENT PHOTO
+  // ================================
+
+  function showCurrentPhoto(){
+
+    const photo =
+      currentPhotoFiles[currentPhotoIndex];
+
+    if(!photo){
+      return;
+    }
+
+    photoBox.innerHTML = "";
+
+    const img =
+      document.createElement("img");
+
+    img.src = photo.url;
+
+    img.style.width = "100%";
+    img.style.height = "100%";
+    img.style.objectFit = "contain";
+
+    photoBox.appendChild(img);
+
+  }
+
+
+  // ================================
+  // TAP PHOTO TO CHANGE
+  // ================================
+
+  photoBox.onclick = function(){
+
+    if(currentPhotoFiles.length <= 1){
+      return;
+    }
+
+    currentPhotoIndex++;
+
+    if(currentPhotoIndex >= currentPhotoFiles.length){
+      currentPhotoIndex = 0;
+    }
+
+    showCurrentPhoto();
+
+  };
 
 }
   
