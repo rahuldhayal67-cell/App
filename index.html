@@ -1447,12 +1447,6 @@ swipeCard.addEventListener("touchend", async function(){
 
   swipeCard.style.opacity = "0";
 
-  await new Promise(resolve =>
-    setTimeout(resolve, 300)
-  );
-
-  swipeCard.style.opacity = "0";
-
 await new Promise(resolve =>
   setTimeout(resolve, 220)
 );
@@ -1465,6 +1459,7 @@ swipeCard.style.transform =
   "translateX(0) rotate(0deg)";
 
 swipeCard.style.opacity = "1";
+
 
 }, {passive:true});
 
