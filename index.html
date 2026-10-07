@@ -1679,7 +1679,10 @@ function openConversation(userId, userName){
   }
 });
   const typingChannel = db
-  .channel("typing-" + userId)
+  .channel(
+  "typing-" +
+  [user.id, userId].sort().join("-")
+)
   .on(
     "broadcast",
     { event: "typing" },
