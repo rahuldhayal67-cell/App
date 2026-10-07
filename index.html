@@ -959,40 +959,22 @@ select option {
         Chat
       </div>
 
-      <div style="
-        font-size:12px;
-        color:var(--main-secondary,#777);
-      ">
-        Matched
-      </div>
+      <div
+  id="userPresenceStatus"
+  style="
+    font-size:12px;
+    color:var(--main-secondary,#777);
+  "
+>
+  offline
+</div>
     </div>
 
   </div>
 
 
   <!-- MESSAGES -->
-<div
-  id="chatRealtimeStatus"
-  style="
-    text-align:center;
-    font-size:11px;
-    color:#777;
-    padding:4px;
-  "
->
-  Realtime: connecting...
-</div>
-  <div
-  id="typingIndicator"
-  style="
-    display:none;
-    padding:4px 16px 8px;
-    font-size:13px;
-    color:#777;
-  "
->
-  typing...
-</div>
+
   <div
     id="messagesList"
     style="
@@ -1631,6 +1613,8 @@ localStorage.setItem("onboardingStep", "profile");
 
 let currentChatUserId = null;
 let messageChannel = null;
+let presenceChannel = null;
+let typingTimer = null;
 
 async function openConversation(userId, userName){
 
@@ -1661,7 +1645,7 @@ async function openConversation(userId, userName){
     .on(
       "postgres_changes",
       {
-        event: "INSERT",
+        event: "*",
         schema: "public",
         table: "messages",
       },
@@ -1669,82 +1653,141 @@ async function openConversation(userId, userName){
         loadMessages();
       }
     )
-    .subscribe((status) => {
-  console.log("CHAT REALTIME STATUS:", status);
-
-  const statusEl = document.getElementById("chatRealtimeStatus");
-
-  if(statusEl){
-    statusEl.textContent = "Realtime: " + status;
-  }
-});
-    const { data: { user } } = await db.auth.getUser();
+    .subscribe();
+      const { data: { user } } = await db.auth.getUser();
 
   if(!user){
     return;
   }
 
-  const typingRoom =
-    "typing-" +
+  // Remove previous presence channel
+  if(presenceChannel){
+    db.removeChannel(presenceChannel);
+    presenceChannel = null;
+  }
+
+  const presenceRoom =
+    "presence-" +
     [user.id, userId].sort().join("-");
 
-  const typingChannel = db
-    .channel(typingRoom)
+  presenceChannel = db
+    .channel(presenceRoom, {
+      config: {
+        presence: {
+          key: user.id
+        }
+      }
+    })
+    .on(
+      "presence",
+      { event: "sync" },
+      () => {
+
+        const statusEl =
+          document.getElementById("userPresenceStatus");
+
+        if(!statusEl){
+          return;
+        }
+
+        const state =
+          presenceChannel.presenceState();
+
+        const otherUserOnline =
+          Object.keys(state).some(
+            key => key === userId
+          );
+
+        statusEl.textContent =
+          otherUserOnline ? "online" : "offline";
+      }
+    )
     .on(
       "broadcast",
       { event: "typing" },
       (payload) => {
 
-        const indicator =
-          document.getElementById("typingIndicator");
+        const statusEl =
+          document.getElementById("userPresenceStatus");
 
-        if(!indicator){
+        if(!statusEl){
           return;
         }
 
-        if(payload.payload?.typing === true){
-          indicator.textContent = "typing...";
-          indicator.style.display = "block";
-        }else{
-          indicator.style.display = "none";
+        if(
+          payload.payload?.user_id === userId &&
+          payload.payload?.typing === true
+        ){
+          statusEl.textContent = "typing...";
+        }else if(
+          payload.payload?.user_id === userId &&
+          payload.payload?.typing === false
+        ){
+          const state =
+            presenceChannel.presenceState();
+
+          const otherUserOnline =
+            Object.keys(state).some(
+              key => key === userId
+            );
+
+          statusEl.textContent =
+            otherUserOnline ? "online" : "offline";
         }
 
       }
     )
-    .subscribe();
+    .subscribe(async (status) => {
+
+      if(status === "SUBSCRIBED"){
+
+        await presenceChannel.track({
+          user_id: user.id
+        });
+
+      }
+
+    });
 
   const messageInput =
     document.getElementById("messageInput");
-
-  let typingTimer = null;
 
   messageInput.oninput = async () => {
 
     if(!messageInput.value.trim()){
 
-      await typingChannel.send({
+      await presenceChannel.send({
         type: "broadcast",
         event: "typing",
-        payload: { typing: false }
+        payload: {
+          user_id: user.id,
+          typing: false
+        }
       });
 
       return;
     }
 
-    await typingChannel.send({
+    await presenceChannel.send({
       type: "broadcast",
       event: "typing",
-      payload: { typing: true }
+      payload: {
+        user_id: user.id,
+        typing: true
+      }
     });
 
     clearTimeout(typingTimer);
 
     typingTimer = setTimeout(async () => {
 
-      await typingChannel.send({
+      await presenceChannel.send({
         type: "broadcast",
         event: "typing",
-        payload: { typing: false }
+        payload: {
+          user_id: user.id,
+          typing: false
+        }
       });
 
     }, 1500);
@@ -1864,6 +1907,15 @@ function closeConversation(){
         ",receiver_id.eq." + user.id + ")"
       )
       .order("created_at", { ascending:true });
+      // Mark messages from the other person as seen
+  await db
+    .from("messages")
+    .update({
+      read_at: new Date().toISOString()
+    })
+    .eq("sender_id", currentChatUserId)
+    .eq("receiver_id", user.id)
+    .is("read_at", null);
 
   if(error){
     console.error("Message load error:", error);
@@ -1893,6 +1945,13 @@ function closeConversation(){
 
     const bubble =
       document.createElement("div");
+    const isLastMessage =
+  msg.id === messages[messages.length - 1].id;
+
+const showSeen =
+  isMine &&
+  isLastMessage &&
+  msg.read_at;
 
     bubble.style.cssText = `
       display:flex;
@@ -1901,18 +1960,33 @@ function closeConversation(){
     `;
 
     bubble.innerHTML = `
-      <div style="
-        max-width:75%;
-        padding:10px 14px;
-        border-radius:18px;
-        background:${isMine ? "#000" : "#e5e5e5"};
-        color:${isMine ? "#fff" : "#111"};
-        font-size:15px;
-        word-break:break-word;
-      ">
-        ${msg.message}
-      </div>
-    `;
+  <div style="
+    max-width:75%;
+    padding:10px 14px;
+    border-radius:18px;
+    background:${isMine ? "#000" : "#e5e5e5"};
+    color:${isMine ? "#fff" : "#111"};
+    font-size:15px;
+    word-break:break-word;
+  ">
+    ${msg.message}
+
+    ${
+      showSeen
+        ? `
+          <div style="
+            font-size:10px;
+            margin-top:4px;
+            text-align:right;
+            opacity:0.7;
+          ">
+            Seen
+          </div>
+        `
+        : ""
+    }
+  </div>
+`;
 
     list.appendChild(bubble);
   }
