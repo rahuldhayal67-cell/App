@@ -2103,8 +2103,12 @@ item.onclick = function(){
   document.getElementById("app").style.overflow = "hidden";
     document.documentElement.style.overflow = "hidden";
 document.body.style.overflow = "hidden";
-  document.getElementById("profilePage").style.display = "none";
-  document.getElementById("profilePage").classList.add("hidden");
+  const profilePage = document.getElementById("profilePage");
+
+if(profilePage){
+  profilePage.style.display = "none";
+  profilePage.classList.add("hidden");
+}
 
   document.getElementById("photoPage").style.display = "none";
   document.getElementById("photoPage").classList.add("hidden");
@@ -2314,8 +2318,12 @@ swipeCard.style.opacity = "1";
 }, {passive:true});
 
 async function showApp(user){
-  document.getElementById("profilePage").style.display = "none";
-document.getElementById("profilePage").classList.add("hidden");
+  const profilePage = document.getElementById("profilePage");
+
+if(profilePage){
+  profilePage.style.display = "none";
+  profilePage.classList.add("hidden");
+}
 
   document.getElementById("auth").classList.add("hidden");
   document.getElementById("auth").style.display = "none";
@@ -2354,7 +2362,11 @@ document.getElementById("profilePage").classList.add("hidden");
   document.getElementById("app").classList.remove("hidden");
   document.getElementById("app").style.display = "block";
 
-  document.getElementById("profilePage").style.display = "block";
+  const profilePage = document.getElementById("profilePage");
+
+if(profilePage){
+  profilePage.style.display = "block";
+}
 
   return;
 }
@@ -2399,7 +2411,11 @@ document.getElementById("app").style.display = "block";
 
 if(onboardingStep === "verification"){
 
-  document.getElementById("profilePage").style.display = "none";
+  const profilePage = document.getElementById("profilePage");
+
+if(profilePage){
+  profilePage.style.display = "none";
+}
 
   document.getElementById("photoPage").style.display = "none";
   document.getElementById("photoPage").classList.add("hidden");
@@ -2410,7 +2426,11 @@ if(onboardingStep === "verification"){
 }
     if(onboardingStep === "subscription"){
 
-  document.getElementById("profilePage").style.display = "none";
+ const profilePage = document.getElementById("profilePage");
+
+if(profilePage){
+  profilePage.style.display = "none";
+}
 
   document.getElementById("photoPage").style.display = "none";
   document.getElementById("photoPage").classList.add("hidden");
@@ -2424,7 +2444,11 @@ if(onboardingStep === "verification"){
 }
     if(onboardingStep === "photos"){
 
-  document.getElementById("profilePage").style.display = "none";
+  const profilePage = document.getElementById("profilePage");
+
+if(profilePage){
+  profilePage.style.display = "none";
+}
 
   document.getElementById("photoPage").classList.remove("hidden");
   document.getElementById("photoPage").style.display = "block";
@@ -2438,7 +2462,11 @@ if(onboardingStep === "verification"){
   document.getElementById("verificationPage").style.display = "none";
   document.getElementById("verificationPage").classList.add("hidden");
 
-  document.getElementById("profilePage").style.display = "block";
+  const profilePage = document.getElementById("profilePage");
+
+if(profilePage){
+  profilePage.style.display = "block";
+}
 
 }
 }
