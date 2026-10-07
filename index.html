@@ -1405,10 +1405,9 @@ document.body.style.overflow = "hidden";
 
   // Move to next profile immediately
   discoverIndex++;
-
   showNextDiscoverProfile();
 
-  // Save swipe in background
+  // Save the swipe
   const { error } = await db
     .from("profile_actions")
     .insert({
@@ -1419,7 +1418,71 @@ document.body.style.overflow = "hidden";
 
   if(error){
     console.error("Swipe action error:", error);
+    return;
   }
+
+  // Only a LIKE can create a match
+  if(action !== "like"){
+    return;
+  }
+
+  // Check whether the other person already liked this user
+  const { data: reciprocalLike, error: reciprocalError } =
+    await db
+      .from("profile_actions")
+      .select("id")
+      .eq("user_id", targetUserId)
+      .eq("target_user_id", user.id)
+      .eq("action", "like")
+      .maybeSingle();
+
+  if(reciprocalError){
+    console.error(
+      "Reciprocal like check error:",
+      reciprocalError
+    );
+    return;
+  }
+
+  // No mutual like yet
+  if(!reciprocalLike){
+    return;
+  }
+
+  // Store users in a consistent order
+  const user1_id =
+    user.id < targetUserId
+      ? user.id
+      : targetUserId;
+
+  const user2_id =
+    user.id < targetUserId
+      ? targetUserId
+      : user.id;
+
+  // Create the match
+  const { error: matchError } =
+    await db
+      .from("matches")
+      .insert({
+        user1_id: user1_id,
+        user2_id: user2_id
+      });
+
+  if(matchError){
+
+    // Ignore duplicate-match error
+    if(matchError.code !== "23505"){
+      console.error(
+        "Match creation error:",
+        matchError
+      );
+    }
+
+    return;
+  }
+
+  alert("💕 It's a match!");
 
 }
 // ================================
