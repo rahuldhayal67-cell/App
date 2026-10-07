@@ -1632,7 +1632,7 @@ localStorage.setItem("onboardingStep", "profile");
 let currentChatUserId = null;
 let messageChannel = null;
 
-function openConversation(userId, userName){
+async function openConversation(userId, userName){
 
   currentChatUserId = userId;
 
@@ -1678,67 +1678,78 @@ function openConversation(userId, userName){
     statusEl.textContent = "Realtime: " + status;
   }
 });
-  const typingChannel = db
-  .channel(
-  "typing-" +
-  [user.id, userId].sort().join("-")
-)
-  .on(
-    "broadcast",
-    { event: "typing" },
-    (payload) => {
+    const { data: { user } } = await db.auth.getUser();
 
-      const indicator =
-        document.getElementById("typingIndicator");
-
-      if(!indicator){
-        return;
-      }
-
-      if(payload.payload?.typing === true){
-        indicator.textContent = "typing...";
-        indicator.style.display = "block";
-      }else{
-        indicator.style.display = "none";
-      }
-
-    }
-  )
-  .subscribe();
-  const messageInput = document.getElementById("messageInput");
-
-let typingTimer = null;
-
-messageInput.addEventListener("input", async () => {
-
-  if(!messageInput.value.trim()){
-    await typingChannel.send({
-      type: "broadcast",
-      event: "typing",
-      payload: { typing: false }
-    });
+  if(!user){
     return;
   }
 
-  await typingChannel.send({
-    type: "broadcast",
-    event: "typing",
-    payload: { typing: true }
-  });
+  const typingRoom =
+    "typing-" +
+    [user.id, userId].sort().join("-");
 
-  clearTimeout(typingTimer);
+  const typingChannel = db
+    .channel(typingRoom)
+    .on(
+      "broadcast",
+      { event: "typing" },
+      (payload) => {
 
-  typingTimer = setTimeout(async () => {
+        const indicator =
+          document.getElementById("typingIndicator");
+
+        if(!indicator){
+          return;
+        }
+
+        if(payload.payload?.typing === true){
+          indicator.textContent = "typing...";
+          indicator.style.display = "block";
+        }else{
+          indicator.style.display = "none";
+        }
+
+      }
+    )
+    .subscribe();
+
+  const messageInput =
+    document.getElementById("messageInput");
+
+  let typingTimer = null;
+
+  messageInput.oninput = async () => {
+
+    if(!messageInput.value.trim()){
+
+      await typingChannel.send({
+        type: "broadcast",
+        event: "typing",
+        payload: { typing: false }
+      });
+
+      return;
+    }
 
     await typingChannel.send({
       type: "broadcast",
       event: "typing",
-      payload: { typing: false }
+      payload: { typing: true }
     });
 
-  }, 1500);
+    clearTimeout(typingTimer);
 
-});
+    typingTimer = setTimeout(async () => {
+
+      await typingChannel.send({
+        type: "broadcast",
+        event: "typing",
+        payload: { typing: false }
+      });
+
+    }, 1500);
+
+  };
   
 }
 
