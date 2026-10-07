@@ -1609,7 +1609,7 @@ localStorage.setItem("onboardingStep", "profile");
 // ================================
 
 let currentChatUserId = null;
-
+let messageChannel = null;
 
 function openConversation(userId, userName){
 
@@ -1629,11 +1629,36 @@ function openConversation(userId, userName){
       No messages yet.
     </div>
   `;
-  loadMessages();
+    loadMessages();
+
+  if(messageChannel){
+    db.removeChannel(messageChannel);
+  }
+
+  messageChannel = db
+    .channel("chat-" + userId)
+    .on(
+      "postgres_changes",
+      {
+        event: "INSERT",
+        schema: "public",
+        table: "messages",
+        filter: "receiver_id=eq." + userId
+      },
+      () => {
+        loadMessages();
+      }
+    )
+    .subscribe();
 }
 
 
 function closeConversation(){
+
+  if(messageChannel){
+    db.removeChannel(messageChannel);
+    messageChannel = null;
+  }
 
   currentChatUserId = null;
 
