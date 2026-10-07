@@ -983,6 +983,17 @@ select option {
   Realtime: connecting...
 </div>
   <div
+  id="typingIndicator"
+  style="
+    display:none;
+    padding:4px 16px 8px;
+    font-size:13px;
+    color:#777;
+  "
+>
+  typing...
+</div>
+  <div
     id="messagesList"
     style="
       flex:1;
@@ -1667,6 +1678,65 @@ function openConversation(userId, userName){
     statusEl.textContent = "Realtime: " + status;
   }
 });
+  const typingChannel = db
+  .channel("typing-" + userId)
+  .on(
+    "broadcast",
+    { event: "typing" },
+    (payload) => {
+
+      const indicator =
+        document.getElementById("typingIndicator");
+
+      if(!indicator){
+        return;
+      }
+
+      if(payload.payload?.typing === true){
+        indicator.textContent = "typing...";
+        indicator.style.display = "block";
+      }else{
+        indicator.style.display = "none";
+      }
+
+    }
+  )
+  .subscribe();
+  const messageInput = document.getElementById("messageInput");
+
+let typingTimer = null;
+
+messageInput.addEventListener("input", async () => {
+
+  if(!messageInput.value.trim()){
+    await typingChannel.send({
+      type: "broadcast",
+      event: "typing",
+      payload: { typing: false }
+    });
+    return;
+  }
+
+  await typingChannel.send({
+    type: "broadcast",
+    event: "typing",
+    payload: { typing: true }
+  });
+
+  clearTimeout(typingTimer);
+
+  typingTimer = setTimeout(async () => {
+
+    await typingChannel.send({
+      type: "broadcast",
+      event: "typing",
+      payload: { typing: false }
+    });
+
+  }, 1500);
+
+});
+  
 }
 
 
