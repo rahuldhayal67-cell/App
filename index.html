@@ -1629,6 +1629,7 @@ function openConversation(userId, userName){
       No messages yet.
     </div>
   `;
+  loadMessages();
 }
 
 
@@ -1641,6 +1642,125 @@ function closeConversation(){
 
   document.getElementById("chatPage").classList.remove("hidden");
   document.getElementById("chatPage").style.display = "block";
+}
+  async function sendMessage(){
+
+  const input = document.getElementById("messageInput");
+  const message = input.value.trim();
+
+  if(!message){
+    return;
+  }
+
+  if(!currentChatUserId){
+    return;
+  }
+
+  const { data: { user } } =
+    await db.auth.getUser();
+
+  if(!user){
+    return;
+  }
+
+  const { error } = await db
+    .from("messages")
+    .insert({
+      sender_id: user.id,
+      receiver_id: currentChatUserId,
+      message: message
+    });
+
+  if(error){
+
+    console.error("Message send error:", error);
+
+    alert("Could not send message.");
+
+    return;
+  }
+
+  input.value = "";
+
+}
+  async function loadMessages(){
+
+  if(!currentChatUserId){
+    return;
+  }
+
+  const { data: { user } } =
+    await db.auth.getUser();
+
+  if(!user){
+    return;
+  }
+
+  const { data: messages, error } =
+    await db
+      .from("messages")
+      .select("*")
+      .or(
+        "and(sender_id.eq." + user.id +
+        ",receiver_id.eq." + currentChatUserId +
+        "),and(sender_id.eq." + currentChatUserId +
+        ",receiver_id.eq." + user.id + ")"
+      )
+      .order("created_at", { ascending:true });
+
+  if(error){
+    console.error("Message load error:", error);
+    return;
+  }
+
+  const list =
+    document.getElementById("messagesList");
+
+  list.innerHTML = "";
+
+  if(!messages || messages.length === 0){
+
+    list.innerHTML = `
+      <div class="small">
+        No messages yet.
+      </div>
+    `;
+
+    return;
+  }
+
+  for(const msg of messages){
+
+    const isMine =
+      msg.sender_id === user.id;
+
+    const bubble =
+      document.createElement("div");
+
+    bubble.style.cssText = `
+      display:flex;
+      justify-content:${isMine ? "flex-end" : "flex-start"};
+      margin:6px 0;
+    `;
+
+    bubble.innerHTML = `
+      <div style="
+        max-width:75%;
+        padding:10px 14px;
+        border-radius:18px;
+        background:${isMine ? "#000" : "#e5e5e5"};
+        color:${isMine ? "#fff" : "#111"};
+        font-size:15px;
+        word-break:break-word;
+      ">
+        ${msg.message}
+      </div>
+    `;
+
+    list.appendChild(bubble);
+  }
+
+  list.scrollTop = list.scrollHeight;
 }
 async function openChatPage(){
 
