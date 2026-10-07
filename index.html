@@ -1705,6 +1705,37 @@ function closeConversation(){
     return;
   }
 
+  // Show message immediately
+  const list = document.getElementById("messagesList");
+
+  const bubble = document.createElement("div");
+
+  bubble.style.cssText = `
+    display:flex;
+    justify-content:flex-end;
+    margin:6px 0;
+  `;
+
+  bubble.innerHTML = `
+    <div style="
+      max-width:75%;
+      padding:10px 14px;
+      border-radius:18px;
+      background:#000;
+      color:#fff;
+      font-size:15px;
+      word-break:break-word;
+    ">
+      ${message}
+    </div>
+  `;
+
+  list.appendChild(bubble);
+  list.scrollTop = list.scrollHeight;
+
+  input.value = "";
+
+  // Save message to Supabase
   const { error } = await db
     .from("messages")
     .insert({
@@ -1719,13 +1750,11 @@ function closeConversation(){
 
     alert("Could not send message.");
 
+    // Reload to remove the temporary message if saving failed
+    await loadMessages();
+
     return;
   }
-
-  input.value = "";
-
-await loadMessages();
-
 }
   async function loadMessages(){
 
