@@ -1299,19 +1299,35 @@ const {error}=result;
 }
 
 async function login(){
-  
- const email=document.getElementById("email").value;
- const password=document.getElementById("password").value;
 
- const {data,error}=await db.auth.signInWithPassword({email,password});
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value;
 
-if(error){
+  if(!email || !password){
+    document.getElementById("msg").textContent =
+      "Please enter email and password.";
+    return;
+  }
+
   document.getElementById("msg").textContent =
-    "Incorrect email or password.";
-  return;
-}
+    "Logging in...";
 
- showApp(data.user);
+  const { data, error } =
+    await db.auth.signInWithPassword({
+      email,
+      password
+    });
+
+  if(error){
+    document.getElementById("msg").textContent =
+      error.message;
+    return;
+  }
+
+  document.getElementById("msg").textContent =
+    "Login successful...";
+
+  await showApp(data.user);
 }
 function openForgotPassword(){
 
