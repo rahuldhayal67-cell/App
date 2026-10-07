@@ -2292,6 +2292,8 @@ swipeCard.style.opacity = "1";
 }, {passive:true});
 
 async function showApp(user){
+  document.getElementById("profilePage").style.display = "none";
+document.getElementById("profilePage").classList.add("hidden");
 
   document.getElementById("auth").classList.add("hidden");
   document.getElementById("auth").style.display = "none";
