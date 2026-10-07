@@ -971,7 +971,17 @@ select option {
 
 
   <!-- MESSAGES -->
-
+<div
+  id="chatRealtimeStatus"
+  style="
+    text-align:center;
+    font-size:11px;
+    color:#777;
+    padding:4px;
+  "
+>
+  Realtime: connecting...
+</div>
   <div
     id="messagesList"
     style="
@@ -1651,6 +1661,12 @@ function openConversation(userId, userName){
     )
     .subscribe((status) => {
   console.log("CHAT REALTIME STATUS:", status);
+
+  const statusEl = document.getElementById("chatRealtimeStatus");
+
+  if(statusEl){
+    statusEl.textContent = "Realtime: " + status;
+  }
 });
 }
 
