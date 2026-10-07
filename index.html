@@ -2329,9 +2329,19 @@ document.getElementById("profilePage").classList.add("hidden");
     .maybeSingle();
 
   if(error){
-    console.error(error);
-    return;
-  }
+  console.error("PROFILE LOAD ERROR:", error);
+
+  document.getElementById("auth").classList.remove("hidden");
+  document.getElementById("auth").style.display = "block";
+
+  document.getElementById("app").classList.add("hidden");
+  document.getElementById("app").style.display = "none";
+
+  document.getElementById("msg").textContent =
+    "Profile error: " + error.message;
+
+  return;
+}
 
   if(!profile){
 
