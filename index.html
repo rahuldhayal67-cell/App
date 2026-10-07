@@ -420,92 +420,7 @@ select option {
   <option value="">Select city</option>
 </select>
 </div>
-<div class="profile-section">
 
-  <h3>What are you into?</h3>
-
-  <div class="interest-grid">
-
-<p>🎵 Music</p>
-<label><input type="checkbox" name="interest" value="Listening to music"> Listening to music</label>
-<label><input type="checkbox" name="interest" value="Singing"> Singing</label>
-<label><input type="checkbox" name="interest" value="Dancing"> Dancing</label>
-<label><input type="checkbox" name="interest" value="Concerts"> Concerts / live music</label>
-<label><input type="checkbox" name="interest" value="Playing an instrument"> Playing an instrument</label>
-
-<p>🎬 Movies & Entertainment</p>
-<label><input type="checkbox" name="interest" value="Bollywood movies"> Bollywood movies</label>
-<label><input type="checkbox" name="interest" value="Hollywood movies"> Hollywood movies</label>
-<label><input type="checkbox" name="interest" value="Web series"> Web series</label>
-<label><input type="checkbox" name="interest" value="Cinema"> Cinema / theatre</label>
-<label><input type="checkbox" name="interest" value="Netflix"> Netflix & chill</label>
-<label><input type="checkbox" name="interest" value="Anime"> Anime</label>
-<label><input type="checkbox" name="interest" value="Gaming"> Gaming</label>
-
-<p>🏔️ Travel & Outdoors</p>
-<label><input type="checkbox" name="interest" value="Hills"> Hills / mountains</label>
-<label><input type="checkbox" name="interest" value="Beaches"> Beaches</label>
-<label><input type="checkbox" name="interest" value="Road trips"> Road trips</label>
-<label><input type="checkbox" name="interest" value="Trekking"> Trekking</label>
-<label><input type="checkbox" name="interest" value="Camping"> Camping</label>
-<label><input type="checkbox" name="interest" value="Exploring places"> Exploring new places</label>
-<label><input type="checkbox" name="interest" value="Photography"> Photography</label>
-
-<p>🏃 Lifestyle & Fitness</p>
-<label><input type="checkbox" name="interest" value="Gym"> Gym / exercise</label>
-<label><input type="checkbox" name="interest" value="Running"> Running</label>
-<label><input type="checkbox" name="interest" value="Swimming"> Swimming</label>
-<label><input type="checkbox" name="interest" value="Sports"> Sports</label>
-<label><input type="checkbox" name="interest" value="Bike rides"> Bike rides</label>
-<label><input type="checkbox" name="interest" value="Car drives"> Car drives</label>
-<label><input type="checkbox" name="interest" value="Food"> Food / trying restaurants</label>
-<label><input type="checkbox" name="interest" value="Cooking"> Cooking</label>
-<label><input type="checkbox" name="interest" value="Stay at home"> Stay-at-home / lazy days</label>
-
-<p>🍻 Social Life</p>
-<label><input type="checkbox" name="interest" value="Pub"> Pubs / bars</label>
-<label><input type="checkbox" name="interest" value="Parties"> Parties</label>
-<label><input type="checkbox" name="interest" value="Clubs"> Clubs</label>
-<label><input type="checkbox" name="interest" value="Cafe"> Café hopping</label>
-<label><input type="checkbox" name="interest" value="Peaceful places"> Peaceful / quiet places</label>
-<label><input type="checkbox" name="interest" value="Friends"> Going out with friends</label>
-<label><input type="checkbox" name="interest" value="Alone time"> Alone time</label>
-<label><input type="checkbox" name="interest" value="Nightlife"> Nightlife</label>
-
-<p>📚 Interests</p>
-<label><input type="checkbox" name="interest" value="Reading"> Reading books</label>
-<label><input type="checkbox" name="interest" value="Philosophy"> Philosophy</label>
-<label><input type="checkbox" name="interest" value="Spirituality"> Spirituality</label>
-<label><input type="checkbox" name="interest" value="Religion"> Religion</label>
-<label><input type="checkbox" name="interest" value="Politics"> Politics</label>
-<label><input type="checkbox" name="interest" value="Technology"> Technology</label>
-<label><input type="checkbox" name="interest" value="Art"> Art</label>
-<label><input type="checkbox" name="interest" value="Fashion"> Fashion</label>
-<label><input type="checkbox" name="interest" value="Business"> Business / entrepreneurship</label>
-
-<p>🤍 What are you looking for?</p>
-<label><input type="checkbox" name="interest" value="Friendship"> Friendship</label>
-<label><input type="checkbox" name="interest" value="Casual dating"> Casual dating</label>
-<label><input type="checkbox" name="interest" value="Serious relationship"> Serious relationship</label>
-<label><input type="checkbox" name="interest" value="Life partner"> Life partner</label>
-<label><input type="checkbox" name="interest" value="Hook-up"> Hook-up</label>
-<label><input type="checkbox" name="interest" value="Exploring"> New experiences / exploring</label>
-<label><input type="checkbox" name="interest" value="Not sure"> Not sure yet</label>
-</div>
-</div>
-  <div id="profilePage">
-<div class="profile-section">
-
-  <h3>Tell me about yourself</h3>
-
-  <textarea
-    id="bio"
-    placeholder="Tell us a little about yourself..."
-    rows="6"
-    maxlength="500"
-  ></textarea>
-
-</div>
 
 <button onclick="saveProfile()">Save Profile</button>
 </div>
@@ -1559,12 +1474,6 @@ async function saveProfile(){
   const district = document.getElementById("district").value;
   const city = document.getElementById("city").value;
 
-  const selectedInterests =
-    [...document.querySelectorAll(".interest-grid input:checked")]
-      .map(input => input.value);
-
-  const bio = document.getElementById("bio").value.trim();
-
   const { error } = await db
     .from("profiles")
     .upsert({
@@ -1575,9 +1484,7 @@ async function saveProfile(){
       interested_in: interestedIn,
       state: state,
       district: district,
-      city: city,
-      interests: JSON.stringify(selectedInterests),
-      bio: bio
+      city: city
     }, {
       onConflict: "user_id"
     });
@@ -2443,22 +2350,7 @@ async function showApp(user){
   document.getElementById("city").value =
     profile.city || "";
 
-  document.getElementById("bio").value =
-    profile.bio || "";
-
-  let savedInterests = [];
-
-  try{
-    savedInterests = JSON.parse(profile.interests || "[]");
-  }catch(e){
-    savedInterests = [];
-  }
-
-  document
-    .querySelectorAll(".interest-grid input[type='checkbox']")
-    .forEach(input => {
-      input.checked = savedInterests.includes(input.value);
-    });
+  
    
   if(profile.onboarding_completed === true){
 
