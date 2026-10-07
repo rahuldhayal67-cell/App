@@ -1945,13 +1945,18 @@ function closeConversation(){
 
     const bubble =
       document.createElement("div");
-    const isLastMessage =
-  msg.id === messages[messages.length - 1].id;
+    const lastSeenMessage =
+  [...messages]
+    .reverse()
+    .find(m =>
+      m.sender_id === user.id &&
+      m.read_at
+    );
 
 const showSeen =
   isMine &&
-  isLastMessage &&
-  msg.read_at;
+  lastSeenMessage &&
+  msg.id === lastSeenMessage.id;
 
     bubble.style.cssText = `
       display:flex;
