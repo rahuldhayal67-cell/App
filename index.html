@@ -392,18 +392,18 @@ select option {
     placeholder="Your age"
   >
 
-  <select id="sex">
-    <option value="">Select sex</option>
-    <option value="Male">Male</option>
-    <option value="Female">Female</option>
-    <option value="Other">Other</option>
-  </select>
+ <select id="sex">
+  <option value="">Select sex</option>
+  <option value="Male">Male</option>
+  <option value="Female">Female</option>
+</select>
+
 <select id="interestedIn">
   <option value="">Interested in</option>
   <option value="Men">Men</option>
   <option value="Women">Women</option>
-  <option value="Everyone">Everyone</option>
 </select>
+
 </div>
 <div class="profile-section">
 
@@ -863,6 +863,23 @@ let currentPhotoIndex = 0;
     return;
   }
 
+  // Get your own profile
+  const { data: myProfile, error: myProfileError } = await db
+    .from("profiles")
+    .select("sex, interested_in")
+    .eq("user_id", user.id)
+    .maybeSingle();
+
+  if(myProfileError){
+    console.error("My profile load error:", myProfileError);
+    return;
+  }
+
+  if(!myProfile){
+    console.error("My profile not found");
+    return;
+  }
+
   // Get profiles already acted on by this user
   const { data: actions, error: actionsError } = await db
     .from("profile_actions")
@@ -889,9 +906,30 @@ let currentPhotoIndex = 0;
     return;
   }
 
-  discoverProfiles = (profiles || []).filter(profile =>
-    !actedUserIds.includes(profile.user_id)
-  );
+  // Mutual preference filtering
+  discoverProfiles = (profiles || []).filter(profile => {
+
+    // Don't show profiles already liked/passed
+    if(actedUserIds.includes(profile.user_id)){
+      return false;
+    }
+
+    // You want their sex
+    const youWantThem =
+      (myProfile.interested_in === "Men" &&
+       profile.sex === "Male") ||
+      (myProfile.interested_in === "Women" &&
+       profile.sex === "Female");
+
+    // They want your sex
+    const theyWantYou =
+      (profile.interested_in === "Men" &&
+       myProfile.sex === "Male") ||
+      (profile.interested_in === "Women" &&
+       myProfile.sex === "Female");
+
+    return youWantThem && theyWantYou;
+  });
 
   discoverIndex = 0;
 
