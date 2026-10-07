@@ -1327,7 +1327,13 @@ async function login(){
   document.getElementById("msg").textContent =
     "Login successful...";
 
+  try {
   await showApp(data.user);
+} catch (e) {
+  console.error("SHOWAPP ERROR:", e);
+  document.getElementById("msg").textContent =
+    "ShowApp error: " + e.message;
+}
 }
 function openForgotPassword(){
 
