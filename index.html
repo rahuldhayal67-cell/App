@@ -1996,11 +1996,7 @@ document.body.style.overflow = "hidden";
 
   const targetUserId = currentDiscoverProfile.user_id;
 
-  // Move to next profile immediately
-  discoverIndex++;
-  showNextDiscoverProfile();
-
-  // Save the swipe
+  // Save the swipe first
   const { error } = await db
     .from("profile_actions")
     .insert({
@@ -2013,6 +2009,8 @@ document.body.style.overflow = "hidden";
     console.error("Swipe action error:", error);
     return;
   }
+    discoverIndex++;
+await showNextDiscoverProfile();
 
   // Only a LIKE can create a match
   if(action !== "like"){
