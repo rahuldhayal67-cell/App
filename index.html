@@ -2350,8 +2350,6 @@ if(profilePage){
   profilePage.classList.add("hidden");
 }
 
-  document.getElementById("auth").classList.add("hidden");
-  document.getElementById("auth").style.display = "none";
 
   // Keep app hidden until we know which page to show
   document.getElementById("app").classList.add("hidden");
@@ -2423,12 +2421,14 @@ if(profilePage){
 
   
    
-  if(profile.onboarding_completed === true){
+ if(profile.onboarding_completed === true){
+
+  document.getElementById("auth").classList.add("hidden");
+  document.getElementById("auth").style.display = "none";
 
   showMainPage();
   return;
-
-}  
+}
   document.getElementById("app").classList.remove("hidden");
 document.getElementById("app").style.display = "block";
     const onboardingStep =
