@@ -2107,10 +2107,6 @@ item.onclick = function(){
 
   function showMainPage(){
 
-  // Keep app hidden while switching pages
-  document.getElementById("app").classList.add("hidden");
-  document.getElementById("app").style.display = "none";
-
   // Hide onboarding pages first
   document.getElementById("photoPage").style.display = "none";
   document.getElementById("photoPage").classList.add("hidden");
@@ -2149,9 +2145,6 @@ item.onclick = function(){
   document.getElementById("mainPage").classList.remove("hidden");
   document.getElementById("mainPage").style.display = "block";
 
-  // Now show app
-  document.getElementById("app").classList.remove("hidden");
-  document.getElementById("app").style.display = "block";
 
   // Load Discover profiles
   loadDiscoverProfiles();
