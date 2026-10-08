@@ -2107,18 +2107,12 @@ item.onclick = function(){
 }
 
   function showMainPage(){
+
+  // Show the main app container
   document.getElementById("app").classList.remove("hidden");
   document.getElementById("app").style.display = "block";
-  document.getElementById("app").style.overflow = "hidden";
-    document.documentElement.style.overflow = "hidden";
-document.body.style.overflow = "hidden";
-  const profilePage = document.getElementById("profilePage");
 
-if(profilePage){
-  profilePage.style.display = "none";
-  profilePage.classList.add("hidden");
-}
-
+  // Hide onboarding pages
   document.getElementById("photoPage").style.display = "none";
   document.getElementById("photoPage").classList.add("hidden");
 
@@ -2128,10 +2122,20 @@ if(profilePage){
   document.getElementById("subscriptionPage").style.display = "none";
   document.getElementById("subscriptionPage").classList.add("hidden");
 
+  // Hide profile page only if it exists
+  const profilePage = document.getElementById("profilePage");
+
+  if(profilePage){
+    profilePage.style.display = "none";
+    profilePage.classList.add("hidden");
+  }
+
+  // Show Main Page
   document.getElementById("mainPage").classList.remove("hidden");
   document.getElementById("mainPage").style.display = "block";
-    loadDiscoverProfiles();
 
+  // Load Discover profiles
+  loadDiscoverProfiles();
 }
   async function swipeProfile(action){
 
