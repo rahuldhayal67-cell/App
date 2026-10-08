@@ -2596,12 +2596,15 @@ function showAuth(){
 
 }
 
-db.auth.getSession().then(({data})=>{
+db.auth.getSession().then(async ({data})=>{
   if(data.session){
-    showApp(data.session.user);
+    await showApp(data.session.user);
   }else{
     showAuth();
   }
+
+  document.getElementById("startupLoader").style.display = "none";
+  document.body.style.visibility = "visible";
 });
 
   async function compressImage(file){
