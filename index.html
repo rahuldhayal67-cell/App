@@ -1475,9 +1475,18 @@ loadLocationData();
 
 
 async function logout(){
- await db.auth.signOut();
- showAuth();
+  alert("Logout button clicked");
+
+  const { error } = await db.auth.signOut();
+
+  if(error){
+    alert("Logout error: " + error.message);
+    return;
+  }
+
+  showAuth();
 }
+  
 async function saveProfile(){
 
   const { data: { user } } = await db.auth.getUser();
