@@ -293,6 +293,20 @@ select option {
 
 <body>
 
+<div id="startupScreen" style="
+  position:fixed;
+  inset:0;
+  z-index:99999;
+  background:#111;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+">
+  <h1 style="color:#ff3366;font-size:48px;">
+    ConnectN <span style="color:white;">♥</span>
+  </h1>
+</div>
+
 <div class="box">
 
 <h1>ConnectN <span class="logo-heart">♥</span></h1>
@@ -2494,6 +2508,12 @@ if(profilePage){
 }
 
 }
+  const startupScreen =
+  document.getElementById("startupScreen");
+
+if(startupScreen){
+  startupScreen.style.display = "none";
+}
 }
 async function resetPassword(){
 
@@ -2559,6 +2579,12 @@ document.getElementById("auth")
   }, 1500);
 }
 function showAuth(){
+    const startupScreen =
+    document.getElementById("startupScreen");
+
+  if(startupScreen){
+    startupScreen.style.display = "none";
+  }
 
   document.getElementById("auth").classList.remove("hidden");
   document.getElementById("auth").style.display = "block";
