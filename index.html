@@ -1474,15 +1474,7 @@ loadLocationData();
 
 
 async function logout(){
-  alert("Logout button clicked");
-
-  const { error } = await db.auth.signOut();
-
-  if(error){
-    alert("Logout error: " + error.message);
-    return;
-  }
-
+  await db.auth.signOut();
   showAuth();
 }
   
