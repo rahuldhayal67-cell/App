@@ -2108,11 +2108,11 @@ item.onclick = function(){
 
   function showMainPage(){
 
-  // Show the main app container
-  document.getElementById("app").classList.remove("hidden");
-  document.getElementById("app").style.display = "block";
+  // Keep app hidden while switching pages
+  document.getElementById("app").classList.add("hidden");
+  document.getElementById("app").style.display = "none";
 
-  // Hide onboarding pages
+  // Hide onboarding pages first
   document.getElementById("photoPage").style.display = "none";
   document.getElementById("photoPage").classList.add("hidden");
 
@@ -2122,7 +2122,7 @@ item.onclick = function(){
   document.getElementById("subscriptionPage").style.display = "none";
   document.getElementById("subscriptionPage").classList.add("hidden");
 
-  // Hide profile page only if it exists
+  // Hide profile page if it exists
   const profilePage = document.getElementById("profilePage");
 
   if(profilePage){
@@ -2130,13 +2130,34 @@ item.onclick = function(){
     profilePage.classList.add("hidden");
   }
 
+  // Hide chat pages
+  const chatPage = document.getElementById("chatPage");
+
+  if(chatPage){
+    chatPage.style.display = "none";
+    chatPage.classList.add("hidden");
+  }
+
+  const conversationPage =
+    document.getElementById("conversationPage");
+
+  if(conversationPage){
+    conversationPage.style.display = "none";
+    conversationPage.classList.add("hidden");
+  }
+
   // Show Main Page
   document.getElementById("mainPage").classList.remove("hidden");
   document.getElementById("mainPage").style.display = "block";
 
+  // Now show app
+  document.getElementById("app").classList.remove("hidden");
+  document.getElementById("app").style.display = "block";
+
   // Load Discover profiles
   loadDiscoverProfiles();
 }
+
   async function swipeProfile(action){
 
   if(!currentDiscoverProfile){
