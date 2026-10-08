@@ -99,7 +99,7 @@ button{
     color:#aaa;
   }
 }
-.box{max-width:420px;margin:auto;padding:25px}
+.box{max-width:420px;margin:auto;padding:25px;visibility:hidden}
 h1{text-align:center;color:#ff3366}
 input,button{width:100%;box-sizing:border-box;padding:14px;margin:7px 0;border-radius:10px;border:1px solid #ddd;font-size:16px}
 button{background:#000;color:#fff;border:1px solid #000;font-weight:bold}
@@ -2421,7 +2421,7 @@ if(profilePage){
     profile.city || "";
 
   
-   
+  document.querySelector(".box").style.visibility = "visible"; 
  if(profile.onboarding_completed === true){
 
   document.getElementById("auth").classList.add("hidden");
@@ -2562,7 +2562,7 @@ document.getElementById("auth")
 }
 function showAuth(){
     
-
+  document.querySelector(".box").style.visibility = "visible";
   document.getElementById("auth").classList.remove("hidden");
   document.getElementById("auth").style.display = "block";
 
