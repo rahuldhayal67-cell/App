@@ -334,19 +334,36 @@ select option {
   border-color:#38383a !important;
 }
     
-/* Match device theme on Matches and Chat pages */
+/* Automatic device theme: Matches and Chat */
 
 #chatPage,
-#conversationPage{
-  background:var(--main-bg,#f7f7f7);
-  color:var(--main-text,#111);
+#conversationPage {
+  --main-bg: #f7f7f7;
+  --main-card: #ffffff;
+  --main-text: #111111;
+  --main-secondary: #777777;
+  --main-border: #e5e5e5;
+
+  background: var(--main-bg) !important;
+  color: var(--main-text) !important;
+}
+
+@media (prefers-color-scheme: dark) {
+  #chatPage,
+  #conversationPage {
+    --main-bg: #000000;
+    --main-card: #1c1c1e;
+    --main-text: #ffffff;
+    --main-secondary: #aaaaaa;
+    --main-border: #38383a;
+  }
 }
 
 #chatPage > div:first-child,
 #conversationPage > div:first-child,
-#conversationPage > div:last-child{
-  background:var(--main-card,#fff);
-  border-color:var(--main-border,#e5e5e5);
+#conversationPage > div:last-child {
+  background: var(--main-card) !important;
+  border-color: var(--main-border) !important;
 }
 
 #chatPage h2,
@@ -354,76 +371,45 @@ select option {
 #chatPage p,
 #conversationPage h2,
 #conversationPage h3,
-#conversationName{
-  color:var(--main-text,#111);
+#conversationName {
+  color: var(--main-text);
 }
 
-#userPresenceStatus{
-  color:var(--main-secondary,#777);
+#userPresenceStatus {
+  color: var(--main-secondary) !important;
 }
 
 #chatPage button,
-#conversationPage button{
-  background:var(--main-card,#fff);
-  color:var(--main-text,#111);
-  border-color:var(--main-border,#e5e5e5);
+#conversationPage button {
+  background: var(--main-card) !important;
+  color: var(--main-text) !important;
+  border-color: var(--main-border) !important;
 }
 
-#conversationPage #messageInput{
-  background:var(--main-card,#fff);
-  color:var(--main-text,#111);
-  border-color:var(--main-border,#e5e5e5);
+#conversationPage #messageInput {
+  background: var(--main-card) !important;
+  color: var(--main-text) !important;
+  border-color: var(--main-border) !important;
 }
 
-#conversationPage #messageInput::placeholder{
-  color:var(--main-secondary,#777);
+#conversationPage #messageInput::placeholder {
+  color: var(--main-secondary);
 }
 
-#matchesList > div{
-  background:var(--main-card,#fff);
-  color:var(--main-text,#111);
-  border-color:var(--main-border,#e5e5e5);
+#matchesList > div {
+  background: var(--main-card) !important;
+  color: var(--main-text) !important;
+  border-color: var(--main-border) !important;
 }
 
-#matchesList > div *{
-  color:var(--main-text,#111);
+#matchesList > div * {
+  color: var(--main-text);
 }
 
-@media (prefers-color-scheme: dark){
-  #chatPage,
-  #conversationPage{
-    background:#000;
-    color:#fff;
-  }
-
-  #chatPage > div:first-child,
-  #conversationPage > div:first-child,
-  #conversationPage > div:last-child,
-  #matchesList > div{
-    background:#1c1c1e;
-    border-color:#38383a;
-  }
-
-  #chatPage h2,
-  #chatPage h3,
-  #chatPage p,
-  #conversationPage h2,
-  #conversationPage h3,
-  #conversationName,
-  #matchesList > div *{
-    color:#fff;
-  }
-
-  #conversationPage #messageInput{
-    background:#2c2c2e;
-    color:#fff;
-    border-color:#555;
-  }
-
-  #conversationPage #messageInput::placeholder{
-    color:#aaa;
-  }
+#matchesList > div > div:first-child {
+  background: var(--main-bg) !important;
 }
+
 
 </style>
   <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
