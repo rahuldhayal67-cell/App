@@ -1194,6 +1194,7 @@ function urlBase64ToUint8Array(base64String) {
 }
 
 async function enablePushNotifications() {
+  alert("Enable Push function started");
   try {
     const { data: { user }, error: userError } =
       await db.auth.getUser();
