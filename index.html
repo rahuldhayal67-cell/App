@@ -1272,7 +1272,7 @@ alert(
       alert("Could not save subscription: " + error.message);
       return;
     }
-
+document.getElementById("notificationPrompt").style.display = "none";
     alert("💕 ConnectN notifications enabled!");
 
   } catch (error) {
