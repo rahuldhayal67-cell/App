@@ -2111,7 +2111,84 @@ function closeChatPage(){
   document.getElementById("mainPage").classList.remove("hidden");
   document.getElementById("mainPage").style.display = "block";
 }
+// ================================
+// RESTORE PAGE FROM URL
+// ================================
 
+let isRestoringRoute = false;
+
+async function restoreAppRoute(){
+
+  if(isRestoringRoute){
+    return;
+  }
+
+  isRestoringRoute = true;
+
+  try{
+
+    const { data: { user } } = await db.auth.getUser();
+
+    if(!user){
+      return;
+    }
+
+    const { data: profile } = await db
+      .from("profiles")
+      .select("onboarding_completed")
+      .eq("user_id", user.id)
+      .maybeSingle();
+
+    if(!profile || profile.onboarding_completed !== true){
+      return;
+    }
+
+    const route = getAppRoute();
+
+    if(route === "#/matches"){
+
+      await openChatPage();
+
+    }else if(route.startsWith("#/chat/")){
+
+      const targetUserId = route.substring("#/chat/".length);
+
+      if(!targetUserId){
+        setAppRoute("#/main");
+        showMainPage();
+        return;
+      }
+
+      const { data: chatUser } = await db
+        .from("profiles")
+        .select("name")
+        .eq("user_id", targetUserId)
+        .maybeSingle();
+
+      await openConversation(
+        targetUserId,
+        chatUser?.name || "Chat"
+      );
+
+    }else{
+
+      if(route !== "#/main"){
+        setAppRoute("#/main");
+      }
+
+      showMainPage();
+
+    }
+
+  }finally{
+
+    isRestoringRoute = false;
+
+  }
+
+}
+
+window.addEventListener("hashchange", restoreAppRoute);
 
 async function loadMatches(){
 
