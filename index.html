@@ -1259,15 +1259,13 @@ alert(
   "\nAccess token exists: " + !!sessionData.session?.access_token
 );
     const { error } = await db
-      .from("push_subscriptions")
-      .upsert({
-        user_id: user.id,
-        endpoint: subscriptionData.endpoint,
-        p256dh: subscriptionData.keys.p256dh,
-        auth: subscriptionData.keys.auth
-      }, {
-        onConflict: "endpoint"
-      });
+  .from("push_subscriptions")
+  .insert({
+    user_id: user.id,
+    endpoint: subscriptionData.endpoint,
+    p256dh: subscriptionData.keys.p256dh,
+    auth: subscriptionData.keys.auth
+  });
 
     if (error) {
       console.error("Subscription save error:", error);
