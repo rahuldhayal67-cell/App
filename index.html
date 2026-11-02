@@ -1102,6 +1102,26 @@ const SUPABASE_URL = "https://pgperzhczsoifkvdwshd.supabase.co";
 const SUPABASE_KEY = "sb_publishable_q2Ph4B0MXko-tkYPnB2-nA_cleEm3mh";
 
 const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  
+// ================================
+// REGISTER PUSH NOTIFICATION SERVICE WORKER
+// ================================
+
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", async function() {
+    try {
+      const registration = await navigator.serviceWorker.register(
+        "/App/sw.js"
+      );
+
+      console.log("ConnectN service worker registered:", registration.scope);
+
+    } catch (error) {
+      console.error("Service worker registration failed:", error);
+    }
+  });
+}
+
   // ================================
 // DISCOVER / SWIPE PROFILES
 // ================================
