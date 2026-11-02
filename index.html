@@ -1194,25 +1194,22 @@ function urlBase64ToUint8Array(base64String) {
 }
 
 async function enablePushNotifications() {
-  alert("Enable Push function started");
+  
   try {
     const { data: { user }, error: userError } =
       await db.auth.getUser();
-    alert(
-  "User ID: " + (user?.id || "NO USER") +
-  "\nAuth error: " + (userError?.message || "None")
-);
+    
     console.log("Authenticated user ID:", user?.id);
 
     if (userError || !user) {
-      alert("Please log in before enabling notifications.");
+      
       return;
     }
 
     if (!("serviceWorker" in navigator) ||
         !("PushManager" in window) ||
         !("Notification" in window)) {
-      alert("Push notifications are not supported on this device.");
+      
       return;
     }
 
@@ -1225,15 +1222,9 @@ async function enablePushNotifications() {
   Notification.permission === "granted"
     ? "granted"
     : await Notification.requestPermission();
-    alert("Browser permission status: " + permission);
-alert(
-  "Permission: " + Notification.permission +
-  "\nStandalone mode: " + window.navigator.standalone +
-  "\nService Worker: " + ("serviceWorker" in navigator) +
-  "\nPush API: " + ("PushManager" in window)
-);
+    
     if (permission !== "granted") {
-      alert("Notification permission was not granted.");
+      
       return;
     }
 
@@ -1251,13 +1242,10 @@ alert(
     }
 
     const subscriptionData = subscription.toJSON();
-    alert("Saving subscription for user: " + user.id);
+    
 const { data: sessionData } = await db.auth.getSession();
 
-alert(
-  "Session user: " + (sessionData.session?.user?.id || "None") +
-  "\nAccess token exists: " + !!sessionData.session?.access_token
-);
+
     const { error } = await db
   .from("push_subscriptions")
   .insert({
@@ -1269,15 +1257,15 @@ alert(
 
     if (error) {
       console.error("Subscription save error:", error);
-      alert("Could not save subscription: " + error.message);
+      
       return;
     }
 document.getElementById("notificationPrompt").style.display = "none";
-    alert("💕 ConnectN notifications enabled!");
+    
 
   } catch (error) {
     console.error("Push subscription error:", error);
-    alert("Could not enable notifications: " + error.message);
+    
   }
 }
 // ================================
