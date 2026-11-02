@@ -1243,6 +1243,7 @@ async function enablePushNotifications() {
     }
 
     const subscriptionData = subscription.toJSON();
+    alert("Saving subscription for user: " + user.id);
 
     const { error } = await db
       .from("push_subscriptions")
