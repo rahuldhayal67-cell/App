@@ -1253,7 +1253,12 @@ console.log("Push subscription endpoint:", subscriptionData.endpoint);
 
     if (error) {
       console.error("Subscription save error:", error);
-      alert("Could not save notification subscription: " + error.message);
+      alert(
+  "Database error: " + error.message +
+  "\nCode: " + error.code +
+  "\nDetails: " + error.details +
+  "\nHint: " + error.hint
+);
       return;
     }
 
