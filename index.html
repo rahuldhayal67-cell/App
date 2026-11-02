@@ -806,7 +806,10 @@ select option {
     </button>
 
     <button
-      onclick="document.getElementById('notificationPrompt').style.display='none'"
+      onclick="
+  localStorage.setItem('notificationPromptDismissed', 'true');
+  document.getElementById('notificationPrompt').style.display='none';
+"
       style="
         background:#000000;
         color:#ffffff;
@@ -821,7 +824,11 @@ select option {
 
   </div>
 </div>
-
+<script>
+  if (localStorage.getItem("notificationPromptDismissed") === "true") {
+    document.getElementById("notificationPrompt").style.display = "none";
+  }
+</script>
 
     <!-- PROFILE CARD -->
 
@@ -1255,11 +1262,12 @@ const { data: sessionData } = await db.auth.getSession();
     auth: subscriptionData.keys.auth
   });
 
-    if (error) {
-      console.error("Subscription save error:", error);
-      
-      return;
-    }
+    if (error && error.code !== "23505") {
+  console.error("Subscription save error:", error);
+  return;
+}
+
+localStorage.setItem("notificationPromptDismissed", "true");
 document.getElementById("notificationPrompt").style.display = "none";
     
 
