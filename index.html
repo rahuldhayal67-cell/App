@@ -1261,7 +1261,32 @@ async function enablePushNotifications() {
     alert("Could not enable notifications: " + error.message);
   }
 }
+// ================================
 
+// DISCOVER / SWIPE PROFILES
+
+// ================================
+
+let discoverProfiles = [];
+
+let discoverIndex = 0;
+
+let currentDiscoverProfile = null;
+
+let currentPhotoFiles = [];
+
+let currentPhotoIndex = 0;
+
+let discoverPhotoCache = new Map();
+
+async function loadDiscoverProfiles() {
+
+  const { data: { user } } = await db.auth.getUser();
+
+  if (!user) {
+
+    return;
+  }
   // Get your own profile
   const { data: myProfile, error: myProfileError } = await db
     .from("profiles")
