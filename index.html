@@ -768,6 +768,55 @@ select option {
       Discover
     </h2>
 
+<!-- MATCH NOTIFICATION INVITATION -->
+<div id="notificationPrompt"
+     style="
+       background:#000000;
+       border:1px solid #ffffff;
+       border-radius:14px;
+       padding:14px;
+       margin:12px 0;
+       color:#ffffff;
+     ">
+
+  <div style="font-weight:700;margin-bottom:5px;">
+    💕 Never miss a match!
+  </div>
+
+  <div style="font-size:14px;margin-bottom:12px;">
+    Allow notifications to know instantly when someone likes you back.
+  </div>
+
+  <div style="display:flex;gap:10px;align-items:center;">
+
+    <button
+      onclick="enablePushNotifications()"
+      style="
+        background:#ffffff;
+        color:#000000;
+        border:1px solid #ffffff;
+        border-radius:20px;
+        padding:10px 16px;
+        font-weight:600;
+      ">
+      Allow Notifications
+    </button>
+
+    <button
+      onclick="document.getElementById('notificationPrompt').style.display='none'"
+      style="
+        background:#000000;
+        color:#ffffff;
+        border:1px solid #ffffff;
+        border-radius:20px;
+        padding:10px;
+      ">
+      Not now
+    </button>
+
+  </div>
+</div>
+
 
     <!-- PROFILE CARD -->
 
