@@ -1197,6 +1197,7 @@ async function enablePushNotifications() {
   try {
     const { data: { user }, error: userError } =
       await db.auth.getUser();
+    console.log("Authenticated user ID:", user?.id);
 
     if (userError || !user) {
       alert("Please log in before enabling notifications.");
