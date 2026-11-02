@@ -1685,7 +1685,19 @@ if(profilePage){
 // ================================
 // CONVERSATION PAGE
 // ================================
+// ================================
+// PAGE URL NAVIGATION
+// ================================
 
+function setAppRoute(route){
+  if(window.location.hash !== route){
+    window.location.hash = route;
+  }
+}
+
+function getAppRoute(){
+  return window.location.hash || "#/main";
+}
 let currentChatUserId = null;
 let messageChannel = null;
 let presenceChannel = null;
