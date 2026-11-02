@@ -2596,7 +2596,22 @@ await showNextDiscoverProfile();
     return;
   }
 
-  if(isMatch){
+    if(isMatch){
+
+    // Send push notification to both matched users
+    const { error: pushError } = await db.functions.invoke(
+      "send-match-push",
+      {
+        body: {
+          target_user_id: targetUserId
+        }
+      }
+    );
+
+    if(pushError){
+      console.error("Match push notification error:", pushError);
+    }
+
     alert("💕 It's a match!");
   }
 }
