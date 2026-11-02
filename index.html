@@ -1221,7 +1221,10 @@ async function enablePushNotifications() {
       return;
     }
 
-    const permission = await Notification.requestPermission();
+    const permission =
+  Notification.permission === "granted"
+    ? "granted"
+    : await Notification.requestPermission();
     alert("Browser permission status: " + permission);
 alert(
   "Permission: " + Notification.permission +
