@@ -1235,6 +1235,13 @@ async function enablePushNotifications() {
 
     const subscriptionData = subscription.toJSON();
     alert("Logged-in user ID: " + user.id);
+    const { data: authCheck, error: authCheckError } =
+  await db.rpc("debug_auth_context");
+
+alert("Database auth: " + JSON.stringify({
+  data: authCheck,
+  error: authCheckError
+}));
     const { data: { session } } = await db.auth.getSession();
 alert("Session exists: " + !!session + "\nSession user matches: " + (session?.user?.id === user.id));
     console.log("Push subscription user:", user.id);
