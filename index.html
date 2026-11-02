@@ -1252,7 +1252,12 @@ alert(
 
     const subscriptionData = subscription.toJSON();
     alert("Saving subscription for user: " + user.id);
+const { data: sessionData } = await db.auth.getSession();
 
+alert(
+  "Session user: " + (sessionData.session?.user?.id || "None") +
+  "\nAccess token exists: " + !!sessionData.session?.access_token
+);
     const { error } = await db
       .from("push_subscriptions")
       .upsert({
