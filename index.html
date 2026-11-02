@@ -1202,6 +1202,14 @@ async function enablePushNotifications() {
       return;
     }
 
+    const { data: { user }, error: userError } =
+      await db.auth.getUser();
+
+    if (userError || !user) {
+      alert("Please log in before enabling notifications.");
+      return;
+    }
+
     if (Notification.permission === "denied") {
       alert("Notifications are blocked. Please enable them in device Settings.");
       return;
@@ -1225,36 +1233,11 @@ async function enablePushNotifications() {
       });
     }
 
-    const { data: { user }, error: userError } =
-      await db.auth.getUser();
-
-    if (userError || !user) {
-      alert("Please log in before enabling notifications.");
-      return;
-    }
-
     const subscriptionData = subscription.toJSON();
-    alert("Logged-in user ID: " + user.id);
-    const { data: authCheck, error: authCheckError } =
-  await db.rpc("debug_auth_context");
-
-alert("Database auth: " + JSON.stringify({
-  data: authCheck,
-  error: authCheckError
-}));
-    const { data: { session } } = await db.auth.getSession();
-alert("Session exists: " + !!session + "\nSession user matches: " + (session?.user?.id === user.id));
-    console.log("Push subscription user:", user.id);
-console.log("Push subscription endpoint:", subscriptionData.endpoint);
 
     const { error } = await db
-  .from("push_subscriptions")
-  .insert({
-    user_id: user.id,
-    endpoint: subscriptionData.endpoint,
-    p256dh: subscriptionData.keys.p256dh,
-    auth: subscriptionData.keys.auth
-  });
+      .from("push_subscriptions")
+      .upsert({
         user_id: user.id,
         endpoint: subscriptionData.endpoint,
         p256dh: subscriptionData.keys.p256dh,
@@ -1265,12 +1248,7 @@ console.log("Push subscription endpoint:", subscriptionData.endpoint);
 
     if (error) {
       console.error("Subscription save error:", error);
-      alert(
-  "Database error: " + error.message +
-  "\nCode: " + error.code +
-  "\nDetails: " + error.details +
-  "\nHint: " + error.hint
-);
+      alert("Could not save notification subscription: " + error.message);
       return;
     }
 
@@ -1280,6 +1258,7 @@ console.log("Push subscription endpoint:", subscriptionData.endpoint);
     console.error("Push subscription error:", error);
     alert("Could not enable notifications: " + error.message);
   }
+}
 }
 
 
