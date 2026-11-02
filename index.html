@@ -1248,8 +1248,13 @@ alert("Session exists: " + !!session + "\nSession user matches: " + (session?.us
 console.log("Push subscription endpoint:", subscriptionData.endpoint);
 
     const { error } = await db
-      .from("push_subscriptions")
-      .upsert({
+  .from("push_subscriptions")
+  .insert({
+    user_id: user.id,
+    endpoint: subscriptionData.endpoint,
+    p256dh: subscriptionData.keys.p256dh,
+    auth: subscriptionData.keys.auth
+  });
         user_id: user.id,
         endpoint: subscriptionData.endpoint,
         p256dh: subscriptionData.keys.p256dh,
