@@ -1706,6 +1706,7 @@ let typingTimer = null;
 async function openConversation(userId, userName){
 
   currentChatUserId = userId;
+  setAppRoute("#/chat/" + userId);
 
   document.getElementById("chatPage").style.display = "none";
   document.getElementById("chatPage").classList.add("hidden");
@@ -1892,6 +1893,7 @@ function closeConversation(){
   }
 
   currentChatUserId = null;
+  setAppRoute("#/matches");
 
   document.getElementById("conversationPage").style.display = "none";
   document.getElementById("conversationPage").classList.add("hidden");
@@ -2088,6 +2090,7 @@ border:1px solid #fff;
   list.scrollTop = list.scrollHeight;
 }
 async function openChatPage(){
+    setAppRoute("#/matches");
 
   document.getElementById("mainPage").style.display = "none";
   document.getElementById("mainPage").classList.add("hidden");
@@ -2100,6 +2103,7 @@ async function openChatPage(){
 
 
 function closeChatPage(){
+    setAppRoute("#/main");
 
   document.getElementById("chatPage").style.display = "none";
   document.getElementById("chatPage").classList.add("hidden");
