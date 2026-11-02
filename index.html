@@ -825,9 +825,7 @@ select option {
   </div>
 </div>
 <script>
-  if (localStorage.getItem("notificationPromptDismissed") === "true") {
-    document.getElementById("notificationPrompt").style.display = "none";
-  }
+  localStorage.removeItem("notificationPromptDismissed");
 </script>
 
     <!-- PROFILE CARD -->
