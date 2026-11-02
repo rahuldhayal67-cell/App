@@ -1234,6 +1234,7 @@ async function enablePushNotifications() {
     }
 
     const subscriptionData = subscription.toJSON();
+    alert("Logged-in user ID: " + user.id);
     console.log("Push subscription user:", user.id);
 console.log("Push subscription endpoint:", subscriptionData.endpoint);
 
