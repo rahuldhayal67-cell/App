@@ -1195,13 +1195,6 @@ function urlBase64ToUint8Array(base64String) {
 
 async function enablePushNotifications() {
   try {
-    if (!("serviceWorker" in navigator) ||
-        !("PushManager" in window) ||
-        !("Notification" in window)) {
-      alert("Push notifications are not supported on this device.");
-      return;
-    }
-
     const { data: { user }, error: userError } =
       await db.auth.getUser();
 
@@ -1210,8 +1203,15 @@ async function enablePushNotifications() {
       return;
     }
 
+    if (!("serviceWorker" in navigator) ||
+        !("PushManager" in window) ||
+        !("Notification" in window)) {
+      alert("Push notifications are not supported on this device.");
+      return;
+    }
+
     if (Notification.permission === "denied") {
-      alert("Notifications are blocked. Please enable them in device Settings.");
+      alert("Notifications are blocked. Enable them in device Settings.");
       return;
     }
 
@@ -1224,12 +1224,14 @@ async function enablePushNotifications() {
 
     const registration = await navigator.serviceWorker.ready;
 
-    let subscription = await registration.pushManager.getSubscription();
+    let subscription =
+      await registration.pushManager.getSubscription();
 
     if (!subscription) {
       subscription = await registration.pushManager.subscribe({
         userVisibleOnly: true,
-        applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY)
+        applicationServerKey:
+          urlBase64ToUint8Array(VAPID_PUBLIC_KEY)
       });
     }
 
@@ -1248,37 +1250,17 @@ async function enablePushNotifications() {
 
     if (error) {
       console.error("Subscription save error:", error);
-      alert("Could not save notification subscription: " + error.message);
+      alert("Could not save subscription: " + error.message);
       return;
     }
 
-    alert("💕 ConnectN notifications enabled on this device!");
+    alert("💕 ConnectN notifications enabled!");
 
   } catch (error) {
     console.error("Push subscription error:", error);
     alert("Could not enable notifications: " + error.message);
   }
 }
-}
-
-
-  // ================================
-// DISCOVER / SWIPE PROFILES
-// ================================
-
-let discoverProfiles = [];
-let discoverIndex = 0;
-let currentDiscoverProfile = null;
-let currentPhotoFiles = [];
-let currentPhotoIndex = 0;
-  let discoverPhotoCache = new Map();
-  async function loadDiscoverProfiles(){
-
-  const { data: { user } } = await db.auth.getUser();
-
-  if(!user){
-    return;
-  }
 
   // Get your own profile
   const { data: myProfile, error: myProfileError } = await db
