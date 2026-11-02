@@ -1222,6 +1222,7 @@ async function enablePushNotifications() {
     }
 
     const permission = await Notification.requestPermission();
+    alert("Browser permission status: " + permission);
 
     if (permission !== "granted") {
       alert("Notification permission was not granted.");
