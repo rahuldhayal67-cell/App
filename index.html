@@ -1198,6 +1198,10 @@ async function enablePushNotifications() {
   try {
     const { data: { user }, error: userError } =
       await db.auth.getUser();
+    alert(
+  "User ID: " + (user?.id || "NO USER") +
+  "\nAuth error: " + (userError?.message || "None")
+);
     console.log("Authenticated user ID:", user?.id);
 
     if (userError || !user) {
