@@ -1234,6 +1234,8 @@ async function enablePushNotifications() {
     }
 
     const subscriptionData = subscription.toJSON();
+    console.log("Push subscription user:", user.id);
+console.log("Push subscription endpoint:", subscriptionData.endpoint);
 
     const { error } = await db
       .from("push_subscriptions")
